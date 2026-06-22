@@ -50,6 +50,7 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    Memo1: TMemo;
     Shape1: TShape;
     Shape10: TShape;
     Shape11: TShape;
@@ -79,6 +80,7 @@ type
     procedure CheckBox6EditingDone(Sender: TObject);
     procedure CheckBox8EditingDone(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure Shape1MouseEnter(Sender: TObject);
     procedure Shape1Paint(Sender: TObject);
@@ -103,7 +105,7 @@ type
     procedure SpinEdit6EditingDone(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
-
+    procedure ShowStatus();
   public
 
   end;
@@ -118,12 +120,114 @@ var
   Pattern2Index:integer;
 
   Layer: array[1..6] of Layer_;
+  EventsList: TStringList;
+  OldCurrentLayer:integer;
+
+  MouseEnter_:integer;
 
 implementation
 
 {$R *.lfm}
 
 { TForm1 }
+
+procedure TForm1.ShowStatus();
+begin
+
+  Label6.Caption:=Layer[1].CounterDulationTime_Act.ToString+' t';
+  Label7.Caption:=Layer[2].CounterDulationTime_Act.ToString+' t';
+  Label8.Caption:=Layer[3].CounterDulationTime_Act.ToString+' t';
+  Label9.Caption:=Layer[4].CounterDulationTime_Act.ToString+' t';
+  Label10.Caption:=Layer[5].CounterDulationTime_Act.ToString+' t';
+  Label11.Caption:=Layer[6].CounterDulationTime_Act.ToString+' t';
+
+  if MouseEnter_=0 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   '  - Pattern1Run:= ' + Pattern1Run.ToString + chr(13)+
+                   '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13)+
+                   '  - Pattern2Run:= ' + Pattern2Run.ToString + chr(13)+
+                   '  - Pattern2Index:= ' + Pattern2Index.ToString + chr(13);
+  end;
+
+  if MouseEnter_=1 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[1]' + chr(13)+
+                   '  - Start:= ' + Layer[1].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[1].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[1].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[1].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[1].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[1].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[1].Enable.ToInteger.ToString + chr(13);
+  end;
+
+  if MouseEnter_=2 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[2]' + chr(13)+
+                   '  - Start:= ' + Layer[2].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[2].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[2].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[2].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[2].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[2].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[2].Enable.ToInteger.ToString + chr(13);
+  end;
+
+  if MouseEnter_=3 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[3]' + chr(13)+
+                   '  - Start:= ' + Layer[3].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[3].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[3].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[3].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[3].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[3].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[3].Enable.ToInteger.ToString + chr(13);
+  end;
+
+  if MouseEnter_=4 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[4]' + chr(13)+
+                   '  - Start:= ' + Layer[4].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[4].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[4].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[4].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[4].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[4].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[4].Enable.ToInteger.ToString + chr(13);
+  end;
+
+  if MouseEnter_=5 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[5]' + chr(13)+
+                   '  - Start:= ' + Layer[5].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[5].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[5].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[5].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[5].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[5].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[5].Enable.ToInteger.ToString + chr(13);
+  end;
+
+  if MouseEnter_=6 then
+  begin
+  Label15.Caption:='Status: ' + chr(13)+
+                   'Layer[End]' + chr(13)+
+                   '  - Start:= ' + Layer[6].Start.ToInteger.ToString + chr(13)+
+                   '  - UnderRunning:= ' + Layer[6].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - EndOfCounterDulation:= ' + Layer[6].EndOfCounterDulation.ToInteger.ToString + chr(13)+
+                   '  - CounterDulationTime_Act:= ' + Layer[6].CounterDulationTime_Act.ToString + chr(13)+
+                   '  - RunDulationTime_Act:= ' + Layer[6].RunDulationTime_Act.ToString + chr(13)+
+                   '  - CounterDulationTime_Set:= ' + Layer[6].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - Enable:= ' + Layer[6].Enable.ToInteger.ToString + chr(13);
+  end;
+end;
 
 procedure TForm1.Shape8Paint(Sender: TObject);
 var
@@ -171,7 +275,11 @@ var
   LastLayerActive:boolean;
   CurrentLayer:integer;
   AllLayerDisable:boolean;
+  EndLoop:boolean;
+  PreEndLoop:boolean;
+  Tempo:integer;
 begin
+  CurrentLayer:=0;
 
   if (Pattern1Run) then
   begin
@@ -189,8 +297,39 @@ begin
     if(Pattern1Index=0)then begin Pattern1Index:=1; Layer[Pattern1[Pattern1Index]].Start:=true; end;
     if(AllLayerDisable)then begin Pattern1Index:=0; Layer[Pattern1[1]].Start:=false; end;
 
-    for i := 1 to 5 do
-    begin
+    //for i := 1 to 5 do
+    //begin
+    //  if (Pattern1Index>0) and (Pattern1Index<6) then
+    //  if ((Pattern1[Pattern1Index]=i) and Layer[i].Start) then
+    //  begin
+    //    if((not Layer[i].Enable) and Layer[i].Start) then
+    //    begin
+    //      Layer[i].Start:=false;
+    //      Pattern1Index:=Pattern1Index+1;
+    //      if (Pattern1Index<6) then Layer[Pattern1[Pattern1Index]].Start:=true;
+    //      if (Pattern1Index>=6) then Layer[6].Start:=true;
+    //    end;
+    //    if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
+    //    begin
+    //      Layer[i].Start:=false;
+    //      Pattern1Index:=Pattern1Index+1;
+    //      if (Pattern1Index<6) then Layer[Pattern1[Pattern1Index]].Start:=true;
+    //      if (Pattern1Index>=6) then Layer[6].Start:=true;
+    //    end;
+    //  end;
+    //
+    //  if (Pattern1Index>0) and (Pattern1Index<6) then
+    //  if (not Layer[Pattern1[Pattern1Index]].Start) then
+    //  begin
+    //
+    //  end;
+    //end;
+
+    EndLoop:=false;
+    PreEndLoop:=false;
+    i:=1;
+    repeat
+
       if (Pattern1Index>0) and (Pattern1Index<6) then
       if ((Pattern1[Pattern1Index]=i) and Layer[i].Start) then
       begin
@@ -198,18 +337,34 @@ begin
         begin
           Layer[i].Start:=false;
           Pattern1Index:=Pattern1Index+1;
-          if (Pattern1Index<6) then Layer[Pattern1[Pattern1Index]].Start:=true;
-          if (Pattern1Index>=6) then Layer[6].Start:=true;
+          if (Pattern1Index<6) then begin Layer[Pattern1[Pattern1Index]].Start:=true; PreEndLoop:=true; end;
+          if (Pattern1Index>=6) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
         if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
         begin
           Layer[i].Start:=false;
           Pattern1Index:=Pattern1Index+1;
-          if (Pattern1Index<6) then Layer[Pattern1[Pattern1Index]].Start:=true;
-          if (Pattern1Index>=6) then Layer[6].Start:=true;
+          if (Pattern1Index<6) then begin Layer[Pattern1[Pattern1Index]].Start:=true; PreEndLoop:=true; end;
+          if (Pattern1Index>=6) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
       end;
-    end;
+
+      if (Pattern1Index<=0) or (Pattern1Index>=6) then PreEndLoop:=true;
+      if (Pattern1Index>0) and (Pattern1Index<6) then
+      if (Layer[Pattern1[Pattern1Index]].Enable) and (not Layer[Pattern1[Pattern1Index]].EndOfCounterDulation) and (Layer[Pattern1[Pattern1Index]].Start) then  PreEndLoop:=true;
+      if (Pattern1Index>0) and (Pattern1Index<6) then
+      if (not Layer[Pattern1[Pattern1Index]].Enable) and (Layer[Pattern1[Pattern1Index]].Start) then  PreEndLoop:=false;
+
+      if (Pattern1Index>0) and (Pattern1Index<6) then
+      Tempo:=Pattern1[Pattern1Index];
+
+      i:=i+1;
+      if i>5 then
+      begin
+        i:=1;
+        if PreEndLoop then EndLoop:=true;
+      end;
+    until EndLoop;
 
     if ((Pattern1Index=6) and Layer[6].Start) then
     begin
@@ -298,10 +453,11 @@ begin
     begin
       Shape13.Top:=Shape7.Top;
     end;
-    if (Pattern1Index>0) and (Pattern1Index<6) then
-    CurrentLayer:=Pattern1[Pattern1Index];
-    if (Pattern1Index<=0) or (Pattern1Index>=6) then
-    CurrentLayer:=Pattern1Index;
+
+    if (Pattern1Index>0) and (Pattern1Index<6) then CurrentLayer:=Pattern1[Pattern1Index];
+    if (Pattern1Index>=6) then CurrentLayer:=Pattern1Index;
+    if (Pattern1Index<=0) then CurrentLayer:=0;
+
   end;
 
   if (Pattern2Run) then
@@ -320,8 +476,11 @@ begin
     if(Pattern2Index=0)then begin Pattern2Index:=1; Layer[Pattern2[Pattern2Index]].Start:=true; end;
     if(AllLayerDisable)then begin Pattern2Index:=0; Layer[Pattern2[1]].Start:=false; end;
 
-    for i := 1 to 8 do
-    begin
+    EndLoop:=false;
+    PreEndLoop:=false;
+    i:=1;
+    repeat
+
       if (Pattern2Index>0) and (Pattern2Index<9) then
       if ((Pattern2[Pattern2Index]=i) and Layer[i].Start) then
       begin
@@ -329,18 +488,34 @@ begin
         begin
           Layer[i].Start:=false;
           Pattern2Index:=Pattern2Index+1;
-          if (Pattern2Index<9) then Layer[Pattern2[Pattern2Index]].Start:=true;
-          if (Pattern2Index>=9) then Layer[6].Start:=true;
+          if (Pattern2Index<9) then begin Layer[Pattern2[Pattern2Index]].Start:=true; PreEndLoop:=true; end;
+          if (Pattern2Index>=9) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
         if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
         begin
           Layer[i].Start:=false;
           Pattern2Index:=Pattern2Index+1;
-          if (Pattern2Index<9) then Layer[Pattern2[Pattern2Index]].Start:=true;
-          if (Pattern2Index>=9) then Layer[6].Start:=true;
+          if (Pattern2Index<9) then begin Layer[Pattern2[Pattern2Index]].Start:=true; PreEndLoop:=true; end;
+          if (Pattern2Index>=9) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
       end;
-    end;
+
+      if (Pattern2Index<=0) or (Pattern2Index>=9) then PreEndLoop:=true;
+      if (Pattern2Index>0) and (Pattern2Index<9) then
+      if (Layer[Pattern2[Pattern2Index]].Enable) and (not Layer[Pattern2[Pattern2Index]].EndOfCounterDulation) and (Layer[Pattern2[Pattern2Index]].Start) then  PreEndLoop:=true;
+      if (Pattern2Index>0) and (Pattern2Index<9) then
+      if (not Layer[Pattern2[Pattern2Index]].Enable) and (Layer[Pattern2[Pattern2Index]].Start) then  PreEndLoop:=false;
+
+      if (Pattern2Index>0) and (Pattern2Index<9) then
+      Tempo:=Pattern2[Pattern2Index];
+
+      i:=i+1;
+      if i>8 then
+      begin
+        i:=1;
+        if PreEndLoop then EndLoop:=true;
+      end;
+    until EndLoop;
 
     if ((Pattern2Index=9) and Layer[6].Start) then
     begin
@@ -394,7 +569,6 @@ begin
         Layer[i].RunDulationTime_Act:=0;
         Layer[i].CounterDulationTime_Act:=0;
       end;
-
     end;
 
     if Pattern2Index=0 then
@@ -430,22 +604,28 @@ begin
     begin
       Shape13.Top:=Shape7.Top;
     end;
-    if (Pattern2Index>0) and (Pattern2Index<9) then
-    CurrentLayer:=Pattern2[Pattern2Index];
-    if (Pattern2Index<=0) or (Pattern2Index>=9) then
-    CurrentLayer:=Pattern2Index;
+
+    if (Pattern2Index>0) and (Pattern2Index<9) then CurrentLayer:=Pattern2[Pattern2Index];
+    if (Pattern2Index>=9) then CurrentLayer:=Pattern2Index;
+    if (Pattern2Index<=0) then CurrentLayer:=0;
+
   end;
+
+  if CurrentLayer<>OldCurrentLayer then
+  begin
+    OldCurrentLayer:=CurrentLayer;
+    EventsList.Add('Layer: '+OldCurrentLayer.ToString);
+  end;
+  if EventsList.Count > 13 then EventsList.Delete(0);
+  Memo1.Lines.Assign(EventsList);
 
   if (Pattern1Run) then Label14.Caption:='Index: '+Pattern1Index.ToString;
   if (Pattern2Run) then Label14.Caption:='Index: '+Pattern2Index.ToString;
   if (Pattern1Run) then Label14.Caption:='Pattern1 Index: '+Pattern1Index.ToString+ ' Layer: ' + CurrentLayer.ToString;
   if (Pattern2Run) then Label14.Caption:='Pattern2 Index: '+Pattern2Index.ToString+ ' Layer: ' + CurrentLayer.ToString;
-  Label6.Caption:=Layer[1].CounterDulationTime_Act.ToString+' t';
-  Label7.Caption:=Layer[2].CounterDulationTime_Act.ToString+' t';
-  Label8.Caption:=Layer[3].CounterDulationTime_Act.ToString+' t';
-  Label9.Caption:=Layer[4].CounterDulationTime_Act.ToString+' t';
-  Label10.Caption:=Layer[5].CounterDulationTime_Act.ToString+' t';
-  Label11.Caption:=Layer[6].CounterDulationTime_Act.ToString+' t';
+
+  ShowStatus();
+
 end;
 
 procedure TForm1.Shape1Paint(Sender: TObject);
@@ -459,21 +639,18 @@ end;
 
 procedure TForm1.Shape2MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[1]' + chr(13)+
-                   '  - Start:= ' + Layer[1].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[1].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[1].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[1].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[1].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[1].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[1].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=1;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
   i:integer;
 begin
+  MouseEnter_:=0;
+
+  EventsList:=TStringList.Create;
+  OldCurrentLayer:=-1;
+
   Pattern1Run:=false;
   Pattern2Run:=false;
   Pattern1Index:=0;
@@ -532,6 +709,11 @@ begin
   if (CheckBox10.Checked) then Shape6.Brush.Color:=clGreen;
   if (not CheckBox10.Checked) then Shape6.Brush.Color:=clRed;
 
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  EventsList.Free;
 end;
 
 procedure TForm1.CheckBox1EditingDone(Sender: TObject);
@@ -614,11 +796,7 @@ end;
 
 procedure TForm1.Shape1MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   '  - Pattern1Run:= ' + Pattern1Run.ToString + chr(13)+
-                   '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13)+
-                   '  - Pattern2Run:= ' + Pattern2Run.ToString + chr(13)+
-                   '  - Pattern2Index:= ' + Pattern2Index.ToString + chr(13);
+  MouseEnter_:=0;
 end;
 
 procedure TForm1.Shape2Paint(Sender: TObject);
@@ -632,15 +810,7 @@ end;
 
 procedure TForm1.Shape3MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[2]' + chr(13)+
-                   '  - Start:= ' + Layer[2].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[2].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[2].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[2].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[2].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[2].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[2].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=2;
 end;
 
 procedure TForm1.Shape3Paint(Sender: TObject);
@@ -654,15 +824,7 @@ end;
 
 procedure TForm1.Shape4MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[3]' + chr(13)+
-                   '  - Start:= ' + Layer[3].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[3].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[3].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[3].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[3].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[3].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[3].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=3;
 end;
 
 procedure TForm1.Shape4Paint(Sender: TObject);
@@ -676,15 +838,7 @@ end;
 
 procedure TForm1.Shape5MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[4]' + chr(13)+
-                   '  - Start:= ' + Layer[4].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[4].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[4].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[4].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[4].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[4].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[4].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=4;
 end;
 
 procedure TForm1.Shape5Paint(Sender: TObject);
@@ -698,15 +852,7 @@ end;
 
 procedure TForm1.Shape6MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[5]' + chr(13)+
-                   '  - Start:= ' + Layer[5].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[5].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[5].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[5].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[5].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[5].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[5].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=5;
 end;
 
 procedure TForm1.Shape6Paint(Sender: TObject);
@@ -720,15 +866,7 @@ end;
 
 procedure TForm1.Shape7MouseEnter(Sender: TObject);
 begin
-  Label15.Caption:='Status: ' + chr(13)+
-                   'Layer[End]' + chr(13)+
-                   '  - Start:= ' + Layer[6].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[6].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[6].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[6].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[6].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[6].CounterDulationTime_Set.ToString + chr(13)+
-                   '  - Enable:= ' + Layer[6].Enable.ToInteger.ToString + chr(13);
+  MouseEnter_:=6;
 end;
 
 procedure TForm1.Shape7Paint(Sender: TObject);

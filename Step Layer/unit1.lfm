@@ -1,14 +1,15 @@
 object Form1: TForm1
-  Left = 432
+  Left = 714
   Height = 504
-  Top = 189
-  Width = 621
+  Top = 135
+  Width = 718
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Step Layer'
   ClientHeight = 504
-  ClientWidth = 621
+  ClientWidth = 718
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnPaint = FormPaint
   Position = poWorkAreaCenter
   LCLVersion = '3.4.0.0'
@@ -201,9 +202,9 @@ object Form1: TForm1
     Shape = stTriangleRight
   end
   object Button1: TButton
-    Left = 368
+    Left = 352
     Height = 26
-    Top = 121
+    Top = 114
     Width = 120
     Caption = 'Start/Stop Pattern1'
     TabOrder = 5
@@ -227,7 +228,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit1EditingDone
     TabOrder = 7
-    Value = 250
+    Value = 200
   end
   object SpinEdit2: TSpinEdit
     Left = 218
@@ -238,7 +239,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit2EditingDone
     TabOrder = 8
-    Value = 250
+    Value = 200
   end
   object SpinEdit3: TSpinEdit
     Left = 218
@@ -249,7 +250,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit3EditingDone
     TabOrder = 9
-    Value = 250
+    Value = 200
   end
   object SpinEdit4: TSpinEdit
     Left = 218
@@ -260,7 +261,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit4EditingDone
     TabOrder = 10
-    Value = 250
+    Value = 200
   end
   object SpinEdit5: TSpinEdit
     Left = 218
@@ -271,7 +272,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit5EditingDone
     TabOrder = 11
-    Value = 250
+    Value = 200
   end
   object SpinEdit6: TSpinEdit
     Left = 218
@@ -282,7 +283,7 @@ object Form1: TForm1
     MinValue = 1
     OnEditingDone = SpinEdit6EditingDone
     TabOrder = 12
-    Value = 250
+    Value = 150
   end
   object Label6: TLabel
     Left = 299
@@ -327,23 +328,23 @@ object Form1: TForm1
     Caption = '0 t'
   end
   object Label12: TLabel
-    Left = 370
+    Left = 354
     Height = 30
-    Top = 87
+    Top = 80
     Width = 66
     Caption = 'Pattern 1:'#13#10'1 , 2 , 3 , 4 , 5'
   end
   object Label13: TLabel
-    Left = 370
+    Left = 354
     Height = 30
-    Top = 168
+    Top = 161
     Width = 111
     Caption = 'Pattern 2:'#13#10'1 , 2 , 3 , 4 , 5 , 4 , 3 , 2'
   end
   object Button2: TButton
-    Left = 368
+    Left = 352
     Height = 26
-    Top = 202
+    Top = 195
     Width = 120
     Caption = 'Start/Stop Pattern2'
     TabOrder = 13
@@ -357,9 +358,9 @@ object Form1: TForm1
     Caption = 'Index: 0'
   end
   object Label15: TLabel
-    Left = 370
+    Left = 354
     Height = 15
-    Top = 240
+    Top = 233
     Width = 35
     Caption = 'Status:'
   end
@@ -377,10 +378,20 @@ object Form1: TForm1
     Width = 254
     Caption = '**note [Start]/[END] layer not insert in to pattern'
   end
+  object Memo1: TMemo
+    Left = 568
+    Height = 344
+    Top = 64
+    Width = 144
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 14
+  end
   object Timer1: TTimer
     Interval = 1
     OnTimer = Timer1Timer
-    Left = 504
-    Top = 96
+    Left = 384
+    Top = 48
   end
 end
