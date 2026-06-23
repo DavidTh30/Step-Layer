@@ -27,6 +27,8 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
     CheckBox1: TCheckBox;
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
@@ -74,6 +76,8 @@ type
     TabSheet2: TTabSheet;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
     procedure CheckBox10EditingDone(Sender: TObject);
     procedure CheckBox11EditingDone(Sender: TObject);
     procedure CheckBox1EditingDone(Sender: TObject);
@@ -117,9 +121,20 @@ type
 
   end;
 
+  //type
+  //TIntArray = array[integer] of 1..5;
+
+  type
+  TIntArray = array of integer;
+
+  //type
+  //TIntArray = array[1..5] of integer;
+
 var
   Form1: TForm1;
   Pattern1: array[1..5] of integer = (0,5,3,0,4);
+  //Pattern1: TIntArray = (0,5,3,0,4);
+  //Pattern1: TIntArray;
   Pattern1Run:boolean;
   Pattern1Index:integer;
 
@@ -135,9 +150,30 @@ implementation
 
 { TForm1 }
 
+//var
+//  slice1: TIntArray;
+//begin
+//  slice1 := Copy(MyStack, Low(MyStack), High(MyStack));
+
+procedure Push(var Arr: TIntArray; Value: Integer);
+begin
+  SetLength(Arr, Length(Arr) + 1); // Expand the array
+  //Insert(99, Arr, 0); // Inserts 99 at index 0
+  Arr[High(Arr)] := Value;         // High() returns the last index
+end;
+
+procedure Pop(var Arr: TIntArray);
+begin
+  if Length(Arr) = 0 then
+    raise Exception.Create('Stack underflow: Array is empty');
+  //Delete(Arr, Length(Arr)-1, 1); // Removes 1 elements starting at last index
+  //Result := Arr[High(Arr)];        // Get the last item
+  SetLength(Arr, Length(Arr) - 1); // Shrink the array
+end;
+
 Function TForm1.InLengthLayer(var Index_:integer):boolean;
 begin
-  if (Index_ >= Low(Layer)) and (Index_ <= High(Layer)) then
+  if (Index_ >= Low(Layer)) and (Index_ <= High(Layer)) and (Index_>0) then
     result := true
   else
     result := false;
@@ -148,7 +184,7 @@ begin
   //for i := Low(myArray) to High(myArray) do
   //Length(MyArray)
 
-  if (Index_ >= Low(Pattern1)) and (Index_ <= High(Pattern1)) then
+  if (Index_ >= Low(Pattern1)) and (Index_ <= High(Pattern1)) and (Index_>0) then
     result := true
   else
     result := false;
@@ -156,7 +192,7 @@ End;
 
 Function TForm1.LowerLength_(Index_:integer):boolean;
 begin
-  if (Index_ < Low(Pattern1)) then
+  if ((Index_ < Low(Pattern1)) or (Index_<=0)) then
     result := true
   else
     result := false;
@@ -645,6 +681,45 @@ begin
   else
   begin
 
+  end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+var
+  i:integer;
+  Tempo:TIntArray;
+  cc : array of integer;
+
+begin
+  Tempo:=[3,4,5];
+  cc:=[5,5,5];
+
+  for i := Low(Pattern1) to High(Pattern1) do
+  begin
+  Push(Tempo,Pattern1[i]);
+  end;
+
+  Label12.Caption:='Pattern1:' + chr(13);
+  for i := 1 to 5 do
+  begin
+  Label12.Caption:=Label12.Caption+Pattern1[i].ToString;
+  if i<5 then Label12.Caption:=Label12.Caption+', ';
+  end;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+var
+  i:integer;
+  vv:TIntArray;
+begin
+
+  Pop(vv);
+
+  Label12.Caption:='Pattern1:' + chr(13);
+  for i := 1 to 5 do
+  begin
+  Label12.Caption:=Label12.Caption+Pattern1[i].ToString;
+  if i<5 then Label12.Caption:=Label12.Caption+', ';
   end;
 end;
 
