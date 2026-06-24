@@ -434,7 +434,7 @@ begin
     //Set index with start
     EndLoop:=false;
     PreEndLoop:=false;
-    i:=1;
+    i:=Low(Pattern1);
     repeat
       PreEndLoop:=true;
       if InLength_(Pattern1Index) then
@@ -463,7 +463,7 @@ begin
           if HigherLength_(Pattern1Index) then  Layer[High(Layer)].Start:=true;
         end;
       end;
-      if (i=5) and LowerLength_(Pattern1Index) then
+      if (i=High(Pattern1)) and LowerLength_(Pattern1Index) then
       begin
         PreEndLoop:=true;
       end;
@@ -484,9 +484,9 @@ begin
       end;
 
       i:=i+1;
-      if i>5 then
+      if i>High(Pattern1) then
       begin
-        i:=1;
+        i:=Low(Pattern1);
         if PreEndLoop then EndLoop:=true;
       end;
     until EndLoop;
