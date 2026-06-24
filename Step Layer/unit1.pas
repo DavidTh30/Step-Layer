@@ -11,11 +11,11 @@ uses
 type
 	Layer_ = record
                 Start:boolean;
-		RunDulationTime_Act: integer;
-		CounterDulationTime_Act: integer;
+		RunDurationTime_Act: integer;
+		CounterDurationTime_Act: integer;
 		Index: integer;
-		CounterDulationTime_Set: integer;
-		EndOfCounterDulation: boolean;
+		CounterDurationTime_Set: integer;
+		EndOfCounterDuration: boolean;
                 UnderRunning: boolean;
                 Enable:boolean;
 	end;
@@ -134,12 +134,12 @@ implementation
 procedure TForm1.ShowStatus();
 begin
 
-  Label6.Caption:=Layer[1].CounterDulationTime_Act.ToString+' t';
-  Label7.Caption:=Layer[2].CounterDulationTime_Act.ToString+' t';
-  Label8.Caption:=Layer[3].CounterDulationTime_Act.ToString+' t';
-  Label9.Caption:=Layer[4].CounterDulationTime_Act.ToString+' t';
-  Label10.Caption:=Layer[5].CounterDulationTime_Act.ToString+' t';
-  Label11.Caption:=Layer[6].CounterDulationTime_Act.ToString+' t';
+  Label6.Caption:=Layer[1].CounterDurationTime_Act.ToString+' t';
+  Label7.Caption:=Layer[2].CounterDurationTime_Act.ToString+' t';
+  Label8.Caption:=Layer[3].CounterDurationTime_Act.ToString+' t';
+  Label9.Caption:=Layer[4].CounterDurationTime_Act.ToString+' t';
+  Label10.Caption:=Layer[5].CounterDurationTime_Act.ToString+' t';
+  Label11.Caption:=Layer[6].CounterDurationTime_Act.ToString+' t';
 
   if MouseEnter_=0 then
   begin
@@ -156,10 +156,10 @@ begin
                    'Layer[1]' + chr(13)+
                    '  - Start:= ' + Layer[1].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[1].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[1].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[1].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[1].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[1].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[1].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[1].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[1].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[1].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[1].Enable.ToInteger.ToString + chr(13);
   end;
 
@@ -169,10 +169,10 @@ begin
                    'Layer[2]' + chr(13)+
                    '  - Start:= ' + Layer[2].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[2].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[2].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[2].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[2].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[2].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[2].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[2].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[2].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[2].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[2].Enable.ToInteger.ToString + chr(13);
   end;
 
@@ -182,10 +182,10 @@ begin
                    'Layer[3]' + chr(13)+
                    '  - Start:= ' + Layer[3].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[3].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[3].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[3].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[3].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[3].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[3].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[3].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[3].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[3].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[3].Enable.ToInteger.ToString + chr(13);
   end;
 
@@ -195,10 +195,10 @@ begin
                    'Layer[4]' + chr(13)+
                    '  - Start:= ' + Layer[4].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[4].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[4].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[4].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[4].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[4].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[4].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[4].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[4].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[4].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[4].Enable.ToInteger.ToString + chr(13);
   end;
 
@@ -208,10 +208,10 @@ begin
                    'Layer[5]' + chr(13)+
                    '  - Start:= ' + Layer[5].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[5].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[5].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[5].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[5].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[5].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[5].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[5].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[5].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[5].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[5].Enable.ToInteger.ToString + chr(13);
   end;
 
@@ -221,10 +221,10 @@ begin
                    'Layer[End]' + chr(13)+
                    '  - Start:= ' + Layer[6].Start.ToInteger.ToString + chr(13)+
                    '  - UnderRunning:= ' + Layer[6].UnderRunning.ToInteger.ToString + chr(13)+
-                   '  - EndOfCounterDulation:= ' + Layer[6].EndOfCounterDulation.ToInteger.ToString + chr(13)+
-                   '  - CounterDulationTime_Act:= ' + Layer[6].CounterDulationTime_Act.ToString + chr(13)+
-                   '  - RunDulationTime_Act:= ' + Layer[6].RunDulationTime_Act.ToString + chr(13)+
-                   '  - CounterDulationTime_Set:= ' + Layer[6].CounterDulationTime_Set.ToString + chr(13)+
+                   '  - EndOfCounterDuration:= ' + Layer[6].EndOfCounterDuration.ToInteger.ToString + chr(13)+
+                   '  - CounterDurationTime_Act:= ' + Layer[6].CounterDurationTime_Act.ToString + chr(13)+
+                   '  - RunDurationTime_Act:= ' + Layer[6].RunDurationTime_Act.ToString + chr(13)+
+                   '  - CounterDurationTime_Set:= ' + Layer[6].CounterDurationTime_Set.ToString + chr(13)+
                    '  - Enable:= ' + Layer[6].Enable.ToInteger.ToString + chr(13);
   end;
 end;
@@ -240,32 +240,32 @@ end;
 
 procedure TForm1.SpinEdit1EditingDone(Sender: TObject);
 begin
-  Layer[1].CounterDulationTime_Set:=SpinEdit1.Value;
+  Layer[1].CounterDurationTime_Set:=SpinEdit1.Value;
 end;
 
 procedure TForm1.SpinEdit2EditingDone(Sender: TObject);
 begin
-  Layer[2].CounterDulationTime_Set:=SpinEdit2.Value;
+  Layer[2].CounterDurationTime_Set:=SpinEdit2.Value;
 end;
 
 procedure TForm1.SpinEdit3EditingDone(Sender: TObject);
 begin
-  Layer[3].CounterDulationTime_Set:=SpinEdit3.Value;
+  Layer[3].CounterDurationTime_Set:=SpinEdit3.Value;
 end;
 
 procedure TForm1.SpinEdit4EditingDone(Sender: TObject);
 begin
-  Layer[4].CounterDulationTime_Set:=SpinEdit4.Value;
+  Layer[4].CounterDurationTime_Set:=SpinEdit4.Value;
 end;
 
 procedure TForm1.SpinEdit5EditingDone(Sender: TObject);
 begin
-  Layer[5].CounterDulationTime_Set:=SpinEdit5.Value;
+  Layer[5].CounterDurationTime_Set:=SpinEdit5.Value;
 end;
 
 procedure TForm1.SpinEdit6EditingDone(Sender: TObject);
 begin
-  Layer[6].CounterDulationTime_Set:=SpinEdit6.Value;
+  Layer[6].CounterDurationTime_Set:=SpinEdit6.Value;
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
@@ -309,7 +309,7 @@ begin
     //      if (Pattern1Index<6) then Layer[Pattern1[Pattern1Index]].Start:=true;
     //      if (Pattern1Index>=6) then Layer[6].Start:=true;
     //    end;
-    //    if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
+    //    if(Layer[i].EndOfCounterDuration and Layer[i].Start) then
     //    begin
     //      Layer[i].Start:=false;
     //      Pattern1Index:=Pattern1Index+1;
@@ -340,7 +340,7 @@ begin
           if (Pattern1Index<6) then begin Layer[Pattern1[Pattern1Index]].Start:=true; PreEndLoop:=true; end;
           if (Pattern1Index>=6) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
-        if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
+        if(Layer[i].EndOfCounterDuration and Layer[i].Start) then
         begin
           Layer[i].Start:=false;
           Pattern1Index:=Pattern1Index+1;
@@ -351,7 +351,7 @@ begin
 
       if (Pattern1Index<=0) or (Pattern1Index>=6) then PreEndLoop:=true;
       if (Pattern1Index>0) and (Pattern1Index<6) then
-      if (Layer[Pattern1[Pattern1Index]].Enable) and (not Layer[Pattern1[Pattern1Index]].EndOfCounterDulation) and (Layer[Pattern1[Pattern1Index]].Start) then  PreEndLoop:=true;
+      if (Layer[Pattern1[Pattern1Index]].Enable) and (not Layer[Pattern1[Pattern1Index]].EndOfCounterDuration) and (Layer[Pattern1[Pattern1Index]].Start) then  PreEndLoop:=true;
       if (Pattern1Index>0) and (Pattern1Index<6) then
       if (not Layer[Pattern1[Pattern1Index]].Enable) and (Layer[Pattern1[Pattern1Index]].Start) then  PreEndLoop:=false;
 
@@ -378,7 +378,7 @@ begin
         Layer[6].Start:=false;
         Pattern1Index:=0;
       end;
-      if(Layer[6].EndOfCounterDulation and Layer[6].Start) then
+      if(Layer[6].EndOfCounterDuration and Layer[6].Start) then
       begin
         Layer[6].Start:=false;
         Pattern1Index:=0;
@@ -387,24 +387,24 @@ begin
 
     for i := 1 to 6 do
     begin
-      if (Layer[i].CounterDulationTime_Act>=Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act>=Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].EndOfCounterDulation:=true;
+        Layer[i].EndOfCounterDuration:=true;
         Layer[i].UnderRunning:=false;
       end;
       if Layer[i].Start and Layer[i].Enable then
       begin
-        if Layer[i].RunDulationTime_Act <= Layer[i].CounterDulationTime_Set then
-        Layer[i].RunDulationTime_Act:=Layer[i].RunDulationTime_Act+1;
+        if Layer[i].RunDurationTime_Act <= Layer[i].CounterDurationTime_Set then
+        Layer[i].RunDurationTime_Act:=Layer[i].RunDurationTime_Act+1;
       end;
       if Layer[i].Start and Layer[i].Enable then
-      if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act<Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].CounterDulationTime_Act:=Layer[i].CounterDulationTime_Act+1;
+        Layer[i].CounterDurationTime_Act:=Layer[i].CounterDurationTime_Act+1;
       end;
-      if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act<Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].EndOfCounterDulation:=false;
+        Layer[i].EndOfCounterDuration:=false;
         Layer[i].UnderRunning:=true;
       end;
       if (not Layer[i].Enable) or (not Layer[i].Start) then
@@ -414,8 +414,8 @@ begin
         if (Pattern1[Pattern1Index] <> Layer[i].Index) then
         Layer[i].Start:=false;
         Layer[i].UnderRunning:=false;
-        Layer[i].RunDulationTime_Act:=0;
-        Layer[i].CounterDulationTime_Act:=0;
+        Layer[i].RunDurationTime_Act:=0;
+        Layer[i].CounterDurationTime_Act:=0;
       end;
 
     end;
@@ -491,7 +491,7 @@ begin
           if (Pattern2Index<9) then begin Layer[Pattern2[Pattern2Index]].Start:=true; PreEndLoop:=true; end;
           if (Pattern2Index>=9) then begin Layer[6].Start:=true; PreEndLoop:=true; end;
         end;
-        if(Layer[i].EndOfCounterDulation and Layer[i].Start) then
+        if(Layer[i].EndOfCounterDuration and Layer[i].Start) then
         begin
           Layer[i].Start:=false;
           Pattern2Index:=Pattern2Index+1;
@@ -502,7 +502,7 @@ begin
 
       if (Pattern2Index<=0) or (Pattern2Index>=9) then PreEndLoop:=true;
       if (Pattern2Index>0) and (Pattern2Index<9) then
-      if (Layer[Pattern2[Pattern2Index]].Enable) and (not Layer[Pattern2[Pattern2Index]].EndOfCounterDulation) and (Layer[Pattern2[Pattern2Index]].Start) then  PreEndLoop:=true;
+      if (Layer[Pattern2[Pattern2Index]].Enable) and (not Layer[Pattern2[Pattern2Index]].EndOfCounterDuration) and (Layer[Pattern2[Pattern2Index]].Start) then  PreEndLoop:=true;
       if (Pattern2Index>0) and (Pattern2Index<9) then
       if (not Layer[Pattern2[Pattern2Index]].Enable) and (Layer[Pattern2[Pattern2Index]].Start) then  PreEndLoop:=false;
 
@@ -529,7 +529,7 @@ begin
         Layer[6].Start:=false;
         Pattern2Index:=0;
       end;
-      if(Layer[6].EndOfCounterDulation and Layer[6].Start) then
+      if(Layer[6].EndOfCounterDuration and Layer[6].Start) then
       begin
         Layer[6].Start:=false;
         Pattern2Index:=0;
@@ -538,24 +538,24 @@ begin
 
     for i := 1 to 6 do
     begin
-      if (Layer[i].CounterDulationTime_Act>=Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act>=Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].EndOfCounterDulation:=true;
+        Layer[i].EndOfCounterDuration:=true;
         Layer[i].UnderRunning:=false;
       end;
       if Layer[i].Start and Layer[i].Enable then
       begin
-        if Layer[i].RunDulationTime_Act <= Layer[i].CounterDulationTime_Set then
-        Layer[i].RunDulationTime_Act:=Layer[i].RunDulationTime_Act+1;
+        if Layer[i].RunDurationTime_Act <= Layer[i].CounterDurationTime_Set then
+        Layer[i].RunDurationTime_Act:=Layer[i].RunDurationTime_Act+1;
       end;
       if Layer[i].Start and Layer[i].Enable then
-      if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act<Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].CounterDulationTime_Act:=Layer[i].CounterDulationTime_Act+1;
+        Layer[i].CounterDurationTime_Act:=Layer[i].CounterDurationTime_Act+1;
       end;
-      if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
+      if (Layer[i].CounterDurationTime_Act<Layer[i].CounterDurationTime_Set) then
       begin
-        Layer[i].EndOfCounterDulation:=false;
+        Layer[i].EndOfCounterDuration:=false;
         Layer[i].UnderRunning:=true;
       end;
       if (not Layer[i].Enable) or (not Layer[i].Start) then
@@ -566,8 +566,8 @@ begin
         if (Layer[i].Start) then
         Layer[i].Start:=false;
         Layer[i].UnderRunning:=false;
-        Layer[i].RunDulationTime_Act:=0;
-        Layer[i].CounterDulationTime_Act:=0;
+        Layer[i].RunDurationTime_Act:=0;
+        Layer[i].CounterDurationTime_Act:=0;
       end;
     end;
 
@@ -675,9 +675,9 @@ begin
     Layer[i].Index:=i;
     Layer[i].Start:=false;
     Layer[i].UnderRunning:=false;
-    Layer[i].EndOfCounterDulation:=false;
-    Layer[i].CounterDulationTime_Act:=0;
-    Layer[i].RunDulationTime_Act:=0;
+    Layer[i].EndOfCounterDuration:=false;
+    Layer[i].CounterDurationTime_Act:=0;
+    Layer[i].RunDurationTime_Act:=0;
   end;
 
   Layer[1].Enable:=CheckBox1.Checked;
@@ -687,12 +687,12 @@ begin
   Layer[5].Enable:=CheckBox10.Checked;
   Layer[6].Enable:=CheckBox11.Checked;
 
-  Layer[1].CounterDulationTime_Set:=SpinEdit1.Value;
-  Layer[2].CounterDulationTime_Set:=SpinEdit2.Value;
-  Layer[3].CounterDulationTime_Set:=SpinEdit3.Value;
-  Layer[4].CounterDulationTime_Set:=SpinEdit4.Value;
-  Layer[5].CounterDulationTime_Set:=SpinEdit5.Value;
-  Layer[6].CounterDulationTime_Set:=SpinEdit6.Value;
+  Layer[1].CounterDurationTime_Set:=SpinEdit1.Value;
+  Layer[2].CounterDurationTime_Set:=SpinEdit2.Value;
+  Layer[3].CounterDurationTime_Set:=SpinEdit3.Value;
+  Layer[4].CounterDurationTime_Set:=SpinEdit4.Value;
+  Layer[5].CounterDurationTime_Set:=SpinEdit5.Value;
+  Layer[6].CounterDurationTime_Set:=SpinEdit6.Value;
 
   if (CheckBox1.Checked) then Shape2.Brush.Color:=clGreen;
   if (not CheckBox1.Checked) then Shape2.Brush.Color:=clRed;
@@ -746,9 +746,9 @@ begin
     begin
       Layer[i].Start:=false;
       Layer[i].UnderRunning:=false;
-      Layer[i].EndOfCounterDulation:=false;
-      Layer[i].CounterDulationTime_Act:=0;
-      Layer[i].RunDulationTime_Act:=0;
+      Layer[i].EndOfCounterDuration:=false;
+      Layer[i].CounterDurationTime_Act:=0;
+      Layer[i].RunDurationTime_Act:=0;
     end;
   end
   else
