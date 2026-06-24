@@ -530,31 +530,31 @@ begin
     if InLength_(Pattern1Index) then
     if Pattern1[Pattern1Index]=1 then
     begin
-      Shape13.Top:=Shape2.Top;
+      Shape13.Top:=Shape14.Top;
     end;
     if InLength_(Pattern1Index) then
     if Pattern1[Pattern1Index]=2 then
     begin
-      Shape13.Top:=Shape3.Top;
+      Shape13.Top:=Shape15.Top;
     end;
     if InLength_(Pattern1Index) then
     if Pattern1[Pattern1Index]=3 then
     begin
-      Shape13.Top:=Shape4.Top;
+      Shape13.Top:=Shape16.Top;
     end;
     if InLength_(Pattern1Index) then
     if Pattern1[Pattern1Index]=4 then
     begin
-      Shape13.Top:=Shape5.Top;
+      Shape13.Top:=Shape17.Top;
     end;
     if InLength_(Pattern1Index) then
     if Pattern1[Pattern1Index]=5 then
     begin
-      Shape13.Top:=Shape6.Top;
+      Shape13.Top:=Shape18.Top;
     end;
     if Pattern1Index=6 then
     begin
-      Shape13.Top:=Shape7.Top;
+      Shape13.Top:=Shape19.Top;
     end;
 
     //CurrentLayer
