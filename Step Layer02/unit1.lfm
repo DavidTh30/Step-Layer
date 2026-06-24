@@ -8,11 +8,11 @@ object Form1: TForm1
   Caption = 'Step Layer 02'
   ClientHeight = 520
   ClientWidth = 718
+  Position = poWorkAreaCenter
+  LCLVersion = '4.4.0.0'
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
-  Position = poWorkAreaCenter
-  LCLVersion = '3.4.0.0'
   object PageControl1: TPageControl
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -33,6 +33,55 @@ object Form1: TForm1
       ClientHeight = 492
       ClientWidth = 710
       OnContextPopup = TabSheet1ContextPopup
+      object Shape19: TShape
+        Left = 88
+        Height = 41
+        Top = 328
+        Width = 53
+        Brush.Color = clSilver
+        OnMouseEnter = Shape7MouseEnter
+        OnPaint = Shape19Paint
+      end
+      object Shape18: TShape
+        Left = 88
+        Height = 41
+        Top = 280
+        Width = 45
+        OnMouseEnter = Shape6MouseEnter
+        OnPaint = Shape18Paint
+      end
+      object Shape17: TShape
+        Left = 88
+        Height = 41
+        Top = 233
+        Width = 45
+        OnMouseEnter = Shape5MouseEnter
+        OnPaint = Shape17Paint
+      end
+      object Shape16: TShape
+        Left = 88
+        Height = 41
+        Top = 184
+        Width = 45
+        OnMouseEnter = Shape4MouseEnter
+        OnPaint = Shape16Paint
+      end
+      object Shape15: TShape
+        Left = 88
+        Height = 41
+        Top = 136
+        Width = 45
+        OnMouseEnter = Shape3MouseEnter
+        OnPaint = Shape15Paint
+      end
+      object Shape14: TShape
+        Left = 88
+        Height = 41
+        Top = 88
+        Width = 45
+        OnMouseEnter = Shape2MouseEnter
+        OnPaint = Shape14Paint
+      end
       object Shape1: TShape
         Left = 88
         Height = 41
@@ -42,53 +91,47 @@ object Form1: TForm1
         OnPaint = Shape1Paint
       end
       object Shape2: TShape
-        Left = 88
-        Height = 41
-        Top = 88
-        Width = 45
+        Left = 112
+        Height = 17
+        Top = 112
+        Width = 21
         OnMouseEnter = Shape2MouseEnter
-        OnPaint = Shape2Paint
       end
       object Shape3: TShape
-        Left = 88
-        Height = 41
-        Top = 136
-        Width = 45
+        Left = 112
+        Height = 17
+        Top = 160
+        Width = 21
         OnMouseEnter = Shape3MouseEnter
-        OnPaint = Shape3Paint
       end
       object Shape4: TShape
-        Left = 88
-        Height = 41
-        Top = 184
-        Width = 45
+        Left = 112
+        Height = 17
+        Top = 208
+        Width = 21
         OnMouseEnter = Shape4MouseEnter
-        OnPaint = Shape4Paint
       end
       object Shape5: TShape
-        Left = 88
-        Height = 41
-        Top = 232
-        Width = 45
+        Left = 112
+        Height = 18
+        Top = 256
+        Width = 21
         OnMouseEnter = Shape5MouseEnter
-        OnPaint = Shape5Paint
       end
       object Shape6: TShape
-        Left = 88
-        Height = 41
-        Top = 280
-        Width = 45
+        Left = 112
+        Height = 21
+        Top = 300
+        Width = 21
         OnMouseEnter = Shape6MouseEnter
-        OnPaint = Shape6Paint
       end
       object Shape7: TShape
-        Left = 88
-        Height = 41
-        Top = 328
-        Width = 53
+        Left = 120
+        Height = 19
+        Top = 350
+        Width = 21
         Brush.Color = clSilver
         OnMouseEnter = Shape7MouseEnter
-        OnPaint = Shape7Paint
       end
       object Shape8: TShape
         Left = 72
@@ -246,9 +289,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit1EditingDone
         TabOrder = 7
         Value = 200
+        OnEditingDone = SpinEdit1EditingDone
       end
       object SpinEdit2: TSpinEdit
         Left = 218
@@ -257,9 +300,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit2EditingDone
         TabOrder = 8
         Value = 200
+        OnEditingDone = SpinEdit2EditingDone
       end
       object SpinEdit3: TSpinEdit
         Left = 218
@@ -268,9 +311,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit3EditingDone
         TabOrder = 9
         Value = 200
+        OnEditingDone = SpinEdit3EditingDone
       end
       object SpinEdit4: TSpinEdit
         Left = 218
@@ -279,9 +322,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit4EditingDone
         TabOrder = 10
         Value = 200
+        OnEditingDone = SpinEdit4EditingDone
       end
       object SpinEdit5: TSpinEdit
         Left = 218
@@ -290,9 +333,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit5EditingDone
         TabOrder = 11
         Value = 200
+        OnEditingDone = SpinEdit5EditingDone
       end
       object SpinEdit6: TSpinEdit
         Left = 218
@@ -301,9 +344,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit6EditingDone
         TabOrder = 12
         Value = 150
+        OnEditingDone = SpinEdit6EditingDone
       end
       object Label6: TLabel
         Left = 299

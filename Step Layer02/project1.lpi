@@ -57,9 +57,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="ATShapeLine_package"/>
-      </Item>
-      <Item>
         <PackageName Value="LCL"/>
       </Item>
     </RequiredPackages>

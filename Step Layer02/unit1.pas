@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Spin, ComCtrls, atshapeline, Types;
+  Spin, ComCtrls, Types;
 
 type
 	Layer_ = record
@@ -16,7 +16,8 @@ type
 		Index: integer;
 		CounterDulationTime_Set: integer;
 		EndOfCounterDulation: boolean;
-                UnderRunning: boolean;
+                Running: boolean;
+                StartUp: boolean;
                 Enable:boolean;
                 Mark:boolean;
 	end;
@@ -58,6 +59,12 @@ type
     Shape11: TShape;
     Shape12: TShape;
     Shape13: TShape;
+    Shape14: TShape;
+    Shape15: TShape;
+    Shape16: TShape;
+    Shape17: TShape;
+    Shape18: TShape;
+    Shape19: TShape;
     Shape2: TShape;
     Shape3: TShape;
     Shape4: TShape;
@@ -90,17 +97,17 @@ type
     procedure Shape1MouseEnter(Sender: TObject);
     procedure Shape1Paint(Sender: TObject);
     procedure Shape2MouseEnter(Sender: TObject);
-    procedure Shape2Paint(Sender: TObject);
+    procedure Shape14Paint(Sender: TObject);
     procedure Shape3MouseEnter(Sender: TObject);
-    procedure Shape3Paint(Sender: TObject);
+    procedure Shape15Paint(Sender: TObject);
     procedure Shape4MouseEnter(Sender: TObject);
-    procedure Shape4Paint(Sender: TObject);
+    procedure Shape16Paint(Sender: TObject);
     procedure Shape5MouseEnter(Sender: TObject);
-    procedure Shape5Paint(Sender: TObject);
+    procedure Shape17Paint(Sender: TObject);
     procedure Shape6MouseEnter(Sender: TObject);
-    procedure Shape6Paint(Sender: TObject);
+    procedure Shape18Paint(Sender: TObject);
     procedure Shape7MouseEnter(Sender: TObject);
-    procedure Shape7Paint(Sender: TObject);
+    procedure Shape19Paint(Sender: TObject);
     procedure Shape8Paint(Sender: TObject);
     procedure SpinEdit1EditingDone(Sender: TObject);
     procedure SpinEdit2EditingDone(Sender: TObject);
@@ -228,7 +235,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[1]' + chr(13)+
                    '  - Start:= ' + Layer[1].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[1].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[1].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[1].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[1].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[1].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[1].RunDulationTime_Act.ToString + chr(13)+
@@ -241,7 +249,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[2]' + chr(13)+
                    '  - Start:= ' + Layer[2].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[2].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[2].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[2].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[2].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[2].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[2].RunDulationTime_Act.ToString + chr(13)+
@@ -254,7 +263,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[3]' + chr(13)+
                    '  - Start:= ' + Layer[3].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[3].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[3].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[3].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[3].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[3].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[3].RunDulationTime_Act.ToString + chr(13)+
@@ -267,7 +277,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[4]' + chr(13)+
                    '  - Start:= ' + Layer[4].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[4].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[4].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[4].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[4].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[4].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[4].RunDulationTime_Act.ToString + chr(13)+
@@ -280,7 +291,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[5]' + chr(13)+
                    '  - Start:= ' + Layer[5].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[5].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[5].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[5].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[5].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[5].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[5].RunDulationTime_Act.ToString + chr(13)+
@@ -293,7 +305,8 @@ begin
   Label15.Caption:='Status: ' + chr(13)+
                    'Layer[End]' + chr(13)+
                    '  - Start:= ' + Layer[6].Start.ToInteger.ToString + chr(13)+
-                   '  - UnderRunning:= ' + Layer[6].UnderRunning.ToInteger.ToString + chr(13)+
+                   '  - StartUp:= ' + Layer[6].StartUp.ToInteger.ToString + chr(13)+
+                   '  - Running:= ' + Layer[6].Running.ToInteger.ToString + chr(13)+
                    '  - EndOfCounterDulation:= ' + Layer[6].EndOfCounterDulation.ToInteger.ToString + chr(13)+
                    '  - CounterDulationTime_Act:= ' + Layer[6].CounterDulationTime_Act.ToString + chr(13)+
                    '  - RunDulationTime_Act:= ' + Layer[6].RunDulationTime_Act.ToString + chr(13)+
@@ -484,15 +497,16 @@ begin
       if (Layer[i].CounterDulationTime_Act>=Layer[i].CounterDulationTime_Set) then
       begin
         Layer[i].EndOfCounterDulation:=true;
-        Layer[i].UnderRunning:=false;
+        Layer[i].StartUp:=false;
       end;
       if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
       begin
         Layer[i].EndOfCounterDulation:=false;
-        Layer[i].UnderRunning:=true;
+        Layer[i].StartUp:=true;
       end;
       if Layer[i].Start and Layer[i].Enable then
       begin
+        Layer[i].Running:=true;
         if Layer[i].CounterDulationTime_Act <= Layer[i].CounterDulationTime_Set then
           Layer[i].RunDulationTime_Act:=Layer[i].RunDulationTime_Act+1;
         if (Layer[i].CounterDulationTime_Act<Layer[i].CounterDulationTime_Set) then
@@ -500,7 +514,8 @@ begin
       end;
       if (not Layer[i].Enable) or (not Layer[i].Start) then
       begin
-        Layer[i].UnderRunning:=false;
+        Layer[i].Running:=false;
+        Layer[i].StartUp:=false;
         Layer[i].RunDulationTime_Act:=0;
         Layer[i].CounterDulationTime_Act:=0;
         Layer[i].EndOfCounterDulation:=false;
@@ -552,7 +567,9 @@ begin
   if CurrentLayer<>OldCurrentLayer then
   begin
     OldCurrentLayer:=CurrentLayer;
-    EventsList.Add('Layer: '+OldCurrentLayer.ToString);
+    if OldCurrentLayer < Low(Layer) then EventsList.Add('Layer: '+OldCurrentLayer.ToString+ ' [Start]');
+    if (OldCurrentLayer >= Low(Layer)) and (OldCurrentLayer < High(Layer)) then EventsList.Add('Layer: '+OldCurrentLayer.ToString);
+    if OldCurrentLayer >= High(Layer) then EventsList.Add('Layer: '+OldCurrentLayer.ToString+ ' [End]');
   end;
   if EventsList.Count > 13 then EventsList.Delete(0);
   Memo1.Lines.Assign(EventsList);
@@ -570,7 +587,7 @@ var
 begin
   x_:=round(shape1.Width/2);
   y_:=round(shape1.Height/2);
-  Shape1.Canvas.TextOut(5,y_-5,'0 [Start]');
+  Shape1.Canvas.TextOut(5,y_-9,'0 [Start]');
 end;
 
 procedure TForm1.Shape2MouseEnter(Sender: TObject);
@@ -601,7 +618,8 @@ begin
   begin
     Layer[i].Index:=i;
     Layer[i].Start:=false;
-    Layer[i].UnderRunning:=false;
+    Layer[i].StartUp:=false;
+    Layer[i].Running:=false;
     Layer[i].EndOfCounterDulation:=false;
     Layer[i].CounterDulationTime_Act:=0;
     Layer[i].RunDulationTime_Act:=0;
@@ -637,6 +655,8 @@ begin
   if (CheckBox10.Checked) then Shape6.Brush.Color:=clGreen;
   if (not CheckBox10.Checked) then Shape6.Brush.Color:=clRed;
 
+  if (CheckBox11.Checked) then Shape7.Brush.Color:=clGreen;
+  if (not CheckBox11.Checked) then Shape7.Brush.Color:=clRed;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -658,7 +678,8 @@ end;
 
 procedure TForm1.CheckBox11EditingDone(Sender: TObject);
 begin
-  Layer[6].Enable:=CheckBox11.Checked;
+  if (CheckBox11.Checked) then begin Layer[6].Enable:=true; Shape7.Brush.Color:=clGreen; end;
+  if (not CheckBox11.Checked) then begin Layer[6].Enable:=false; Shape7.Brush.Color:=clRed; end;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -672,7 +693,8 @@ begin
     for i := 1 to 6 do
     begin
       Layer[i].Start:=false;
-      Layer[i].UnderRunning:=false;
+      Layer[i].StartUp:=false;
+      Layer[i].Running:=false;
       Layer[i].EndOfCounterDulation:=false;
       Layer[i].CounterDulationTime_Act:=0;
       Layer[i].RunDulationTime_Act:=0;
@@ -751,13 +773,13 @@ begin
   MouseEnter_:=0;
 end;
 
-procedure TForm1.Shape2Paint(Sender: TObject);
+procedure TForm1.Shape14Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape2.Width/2);
-  y_:=round(shape2.Height/2);
-  Shape2.Canvas.TextOut(x_-5,y_-5,'1');
+  x_:=round(shape14.Width/2);
+  y_:=round(shape14.Height/2);
+  Shape14.Canvas.TextOut(x_-5,y_-9,'1');
 end;
 
 procedure TForm1.Shape3MouseEnter(Sender: TObject);
@@ -765,13 +787,13 @@ begin
   MouseEnter_:=2;
 end;
 
-procedure TForm1.Shape3Paint(Sender: TObject);
+procedure TForm1.Shape15Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape3.Width/2);
-  y_:=round(shape3.Height/2);
-  Shape3.Canvas.TextOut(x_-5,y_-5,'2');
+  x_:=round(shape15.Width/2);
+  y_:=round(shape15.Height/2);
+  Shape15.Canvas.TextOut(x_-5,y_-9,'2');
 end;
 
 procedure TForm1.Shape4MouseEnter(Sender: TObject);
@@ -779,13 +801,13 @@ begin
   MouseEnter_:=3;
 end;
 
-procedure TForm1.Shape4Paint(Sender: TObject);
+procedure TForm1.Shape16Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape4.Width/2);
-  y_:=round(shape4.Height/2);
-  Shape4.Canvas.TextOut(x_-5,y_-5,'3');
+  x_:=round(shape16.Width/2);
+  y_:=round(shape16.Height/2);
+  Shape16.Canvas.TextOut(x_-5,y_-9,'3');
 end;
 
 procedure TForm1.Shape5MouseEnter(Sender: TObject);
@@ -793,13 +815,13 @@ begin
   MouseEnter_:=4;
 end;
 
-procedure TForm1.Shape5Paint(Sender: TObject);
+procedure TForm1.Shape17Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape5.Width/2);
-  y_:=round(shape5.Height/2);
-  Shape5.Canvas.TextOut(x_-5,y_-5,'4');
+  x_:=round(shape17.Width/2);
+  y_:=round(shape17.Height/2);
+  Shape17.Canvas.TextOut(x_-5,y_-9,'4');
 end;
 
 procedure TForm1.Shape6MouseEnter(Sender: TObject);
@@ -807,13 +829,13 @@ begin
   MouseEnter_:=5;
 end;
 
-procedure TForm1.Shape6Paint(Sender: TObject);
+procedure TForm1.Shape18Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape6.Width/2);
-  y_:=round(shape6.Height/2);
-  Shape6.Canvas.TextOut(x_-5,y_-5,'5');
+  x_:=round(shape18.Width/2);
+  y_:=round(shape18.Height/2);
+  Shape18.Canvas.TextOut(x_-5,y_-9,'5');
 end;
 
 procedure TForm1.Shape7MouseEnter(Sender: TObject);
@@ -821,13 +843,13 @@ begin
   MouseEnter_:=6;
 end;
 
-procedure TForm1.Shape7Paint(Sender: TObject);
+procedure TForm1.Shape19Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
-  x_:=round(shape7.Width/2);
-  y_:=round(shape7.Height/2);
-  Shape7.Canvas.TextOut(5,y_-5,'6 [END]');
+  x_:=round(shape19.Width/2);
+  y_:=round(shape19.Height/2);
+  Shape19.Canvas.TextOut(5,y_-9,'6 [END]');
 end;
 
 end.
