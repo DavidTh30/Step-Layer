@@ -9,7 +9,11 @@ Keyword:
 
 Version 03
  - Ready to extend pattern
+ - Give meaning according to the needs.
 
 Version 02
  - Fix the issue if the pattern doesn't match the layer.
  - Increased ability to support adding/removing patterns.
+
+Version 03
+ - Fix extend pattern
