@@ -151,6 +151,9 @@ var
 
   MouseEnter_:integer;
 
+  LastLayerActive:boolean;
+  AllLayerDisable:boolean;
+
 implementation
 
 {$R *.lfm}
@@ -226,8 +229,10 @@ begin
   if MouseEnter_=0 then
   begin
   Label15.Caption:='Status: ' + chr(13)+
-                   '  - Pattern1Run:= ' + Pattern1Run.ToString + chr(13)+
-                   '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13);
+                   '  - Pattern1Run:= ' + Pattern1Run.ToInteger.ToString + chr(13)+
+                   '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13)+
+                   '  - LastLayerActive:= ' + LastLayerActive.ToInteger.ToString + chr(13)+
+                   '  - AllLayerDisable:= ' + AllLayerDisable.ToInteger.ToString + chr(13);
   end;
 
   if MouseEnter_=1 then
@@ -365,9 +370,7 @@ var
   i:integer;
   i2:integer;
   CounterLayer:integer;
-  LastLayerActive:boolean;
   CurrentLayer:integer;
-  AllLayerDisable:boolean;
   EndLoop:boolean;
   PreEndLoop:boolean;
   Tempo:integer;
@@ -424,11 +427,12 @@ begin
     if(AllLayerDisable)then
     begin
       Pattern1Index:=0;
-      Layer[Pattern1[1]].Start:=false;
-      Layer[Pattern1[2]].Start:=false;
-      Layer[Pattern1[3]].Start:=false;
-      Layer[Pattern1[4]].Start:=false;
-      Layer[Pattern1[5]].Start:=false;
+      Layer[1].Start:=false;
+      Layer[2].Start:=false;
+      Layer[3].Start:=false;
+      Layer[4].Start:=false;
+      Layer[5].Start:=false;
+      Layer[6].Start:=false;
     end;
 
     //Set index with start
@@ -507,7 +511,7 @@ begin
       if Layer[i].Start and Layer[i].Enable then
       begin
         Layer[i].Running:=true;
-        if Layer[i].CounterDurationTime_Act <= Layer[i].CounterDurationTime_Set then
+        if Layer[i].CounterDurationTime_Act < Layer[i].CounterDurationTime_Set then
           Layer[i].RunDurationTime_Act:=Layer[i].RunDurationTime_Act+1;
         if (Layer[i].CounterDurationTime_Act<Layer[i].CounterDurationTime_Set) then
           Layer[i].CounterDurationTime_Act:=Layer[i].CounterDurationTime_Act+1;
