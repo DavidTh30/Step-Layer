@@ -125,6 +125,9 @@ var
 
   MouseEnter_:integer;
 
+  LastLayerActive:boolean;
+  AllLayerDisable:boolean;
+
 implementation
 
 {$R *.lfm}
@@ -144,10 +147,12 @@ begin
   if MouseEnter_=0 then
   begin
   Label15.Caption:='Status: ' + chr(13)+
-                   '  - Pattern1Run:= ' + Pattern1Run.ToString + chr(13)+
+                   '  - Pattern1Run:= ' + Pattern1Run.ToInteger.ToString + chr(13)+
                    '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13)+
-                   '  - Pattern2Run:= ' + Pattern2Run.ToString + chr(13)+
-                   '  - Pattern2Index:= ' + Pattern2Index.ToString + chr(13);
+                   '  - Pattern2Run:= ' + Pattern2Run.ToInteger.ToString + chr(13)+
+                   '  - Pattern2Index:= ' + Pattern2Index.ToString + chr(13)+
+                   '  - LastLayerActive:= ' + LastLayerActive.ToInteger.ToString + chr(13)+
+                   '  - AllLayerDisable:= ' + AllLayerDisable.ToInteger.ToString + chr(13);
   end;
 
   if MouseEnter_=1 then
@@ -272,9 +277,7 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   i:integer;
   CounterLayer:integer;
-  LastLayerActive:boolean;
   CurrentLayer:integer;
-  AllLayerDisable:boolean;
   EndLoop:boolean;
   PreEndLoop:boolean;
   Tempo:integer;
