@@ -1,5 +1,5 @@
 DATA_BLOCK Device
-    STRUCT // Date declaration with initial values
+    STRUCT // Declaration with initial values
         Start : ARRAY [1..6] OF BOOL := 6 (false) ;
         IS_StartUp : ARRAY [1..6] OF BOOL := 6 (false) ;
         IS_Running : ARRAY [1..6] OF BOOL := 6 (false) ;
@@ -14,7 +14,7 @@ DATA_BLOCK Device
 
     END_DATA_BLOCK
     
-FUNCTION_BLOCK StepLayer01  //Simulator: https://github.com/DavidTh30/Step-Layer  => Step Layer02
+FUNCTION_BLOCK StepLayer01  //Simulator: https://github.com/DavidTh30/Step-Layer  => Step Layer03
 
 VAR_INPUT
     
@@ -22,6 +22,8 @@ VAR_INPUT
                                        2, 0, 5, 2, 1, 
                                     0;  //Pattern[0] is start   Pattern[11] is End
     
+	//Array Pattern:=[init 0] [Data 1...10] [END 11]
+    //Array Device:=[init 0] [DeviceID 1...5] [END(Virtual) 6] 
     //DO not change----------------------------------------------------------
     Pattern1Index:INT :=0; //Position 0 and Position 11 is for init
     BeginPattern:INT :=0; //Init Array position of Pattern
@@ -30,14 +32,14 @@ VAR_INPUT
     TotalScanPattern:INT :=10; //[Total pattern] of Pattern
     EndPattern:INT :=11; //End of Array position of Pattern
     
-    TotalScanDevice:INT :=6; //[Total Device] + [End]
-    InitPatternDevice:INT :=0;   //Init pattern number 0
+    InitBlankDevice:INT :=0;   //Init Blank Device number 0
     FirstDevice:INT := 1;  //First device
     LastDevice:INT := 5;   //Last device (Total device)
-    EndDevice:INT :=6;     //End Layer is use for only have one device left
+    EndDevice:INT :=6;     //End Layer is use for only have one device left or use as virtual device  
+	TotalScanDevice:INT :=6; //[Total Device] + [End]
     //DO not change----------------------------------------------------------
     
-    StartStepLayer : BOOL := false; //Start function 
+    StartStepLayer : BOOL := false; //Start cycle function 
     Trick : BOOL := false;
 END_VAR
 
@@ -46,7 +48,7 @@ VAR_OUTPUT
 END_VAR
 
 VAR //Static
-  Index : BOOL := false;
+
 END_VAR
 
 VAR_TEMP
@@ -71,11 +73,11 @@ BEGIN
     END_FOR;
 
     FOR i := FirstPattern TO LastPattern DO  //Check pattern
-      IF (Pattern[i] >= FirstDevice) AND (Pattern[i] <= LastDevice) THEN
-        IF (Device.Enable[Pattern[i]]) THEN
-          Device.Mark[Pattern[i]]:=True;
+        IF (Pattern[i] >= FirstDevice) AND (Pattern[i] <= LastDevice) THEN
+          IF (Device.Enable[Pattern[i]]=true) THEN
+            Device.Mark[Pattern[i]]:=True;
+          END_IF;
         END_IF;
-      END_IF;
     END_FOR;
   
     FOR i := FirstDevice TO LastDevice DO  //Check Mark Device
@@ -83,7 +85,7 @@ BEGIN
     END_FOR;
   
     IF(CounterDevice=LastDevice-1)THEN LastDeviceActive:=true; END_IF;
-    IF(CounterDevice=LastDevice)THEN AllDeviceDisable:=true; END_IF;
+    IF(CounterDevice>=LastDevice)THEN AllDeviceDisable:=true; END_IF;
     
     IF (AllDeviceDisable = false) AND(Pattern1Index = 0) THEN
       FOR i2 := FirstPattern TO LastPattern DO
@@ -106,42 +108,50 @@ BEGIN
       END_FOR;
     END_IF;
   
-  //Main cycle loop
+    //Set index with start //Main cycle loop
     EndLoop:=false;
     PreEndLoop:=False;
     i:=FirstPattern;
     REPEAT
       PreEndLoop:=true;
       // Any case begin to next/skip Device then recalculate
-      IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-        IF (Pattern[Pattern1Index]<FirstDevice) OR (Pattern[Pattern1Index]>LastDevice) THEN
-          Pattern1Index:=Pattern1Index+1;
-        END_IF;
-      END_IF;
-      IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-        IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
-          Device.Start[Pattern[Pattern1Index]] := true;
-        END_IF;
-      END_IF;
-      IF (Pattern1Index>LastPattern) THEN Pattern1Index:=EndPattern; END_IF;
-      IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-        IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
-          IF ((Device.Enable[Pattern[Pattern1Index]]=false) AND (Device.Start[Pattern[Pattern1Index]]=true)) OR ((Device.Start[Pattern[Pattern1Index]]=true) AND (Device.EndOfCounterDuration[Pattern[Pattern1Index]]=true)) THEN
-            PreEndLoop:=false;
-            Device.Start[Pattern[Pattern1Index]]:=false;
-            Pattern1Index:=Pattern1Index+1;
+	  IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+	    IF (Pattern[Pattern1Index]<FirstDevice) OR (Pattern[Pattern1Index]>LastDevice) THEN
+	      PreEndLoop:=false;
+	      FOR i2 := FirstPattern TO LastPattern DO
             IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-              IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
-                Device.Start[Pattern[Pattern1Index]]:=true;
+              IF (Pattern[Pattern1Index]<FirstDevice) OR (Pattern[Pattern1Index]>LastDevice) THEN
+                Pattern1Index:=Pattern1Index+1;
               END_IF;
             END_IF;
-            IF (Pattern1Index>LastPattern) THEN Device.Start[EndDevice]:=true; END_IF;
+	      END_FOR;
+          IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+            IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
+              Device.Start[Pattern[Pattern1Index]] := true;
+            END_IF;
+          END_IF;
+		END_IF;
+        IF (Pattern1Index>LastPattern) THEN Pattern1Index:=LastPattern; END_IF;
+        IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+          IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
+            IF ((Device.Enable[Pattern[Pattern1Index]]=false) AND (Device.Start[Pattern[Pattern1Index]]=true)) OR ((Device.Start[Pattern[Pattern1Index]]=true) AND (Device.EndOfCounterDuration[Pattern[Pattern1Index]]=true)) THEN
+              PreEndLoop:=false;
+              Device.Start[Pattern[Pattern1Index]]:=false;
+              Pattern1Index:=Pattern1Index+1;
+              IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+                IF (Pattern[Pattern1Index]>=FirstDevice) AND (Pattern[Pattern1Index]<=LastDevice) THEN
+                  Device.Start[Pattern[Pattern1Index]]:=true;
+                END_IF;
+              END_IF;
+              IF (Pattern1Index>LastPattern) THEN Device.Start[EndDevice]:=true; END_IF;
+            END_IF;
           END_IF;
         END_IF;
-      IF ((i=EndPattern) AND (Pattern1Index<FirstPattern)) THEN
+	  END_IF;
+      IF ((i=LastPattern) AND (Pattern1Index<FirstPattern)) THEN
 	    PreEndLoop=true
 	  END_IF;
-	  IF (Pattern1Index>LastPattern) THEN
+	  IF (Pattern1Index>LastPattern) THEN  // Any begin to next/skip layer then recalculate 
 	    IF ((Device.Enable[EndDevice]=false) OR (Device.Start[EndDevice]=false) OR ((Device.Start[EndDevice]=true) AND (Device.EndOfCounterDuration[EndDevice]=true))) THEN
 	      Pattern1Index:=0;
           Device.Start[EndDevice]:=false;
@@ -170,7 +180,7 @@ BEGIN
     IF (Device.Enable[i] = false) OR (Device.Start[i] = fault) THEN
       Device.IS_StartUp[i] := false;
       Device.IS_Running[i] := false;
-      Device.EndOfCounterDuration[i] := 0;
+      Device.EndOfCounterDuration[i] := false;
       Device.CounterDurationTime_Act[i] := 0;
       Device.RunDurationTime_Act[i] := 0;
     END_IF;
