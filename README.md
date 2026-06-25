@@ -15,5 +15,5 @@ Version 02
  - Fix the issue if the pattern doesn't match the layer.
  - Increased ability to support adding/removing patterns.
 
-Version 03
- - Fix extend pattern
+Version 01
+ - Fix pattern
