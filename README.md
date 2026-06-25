@@ -8,12 +8,12 @@ Keyword:
 <img src="SS01.png" width="400" height="500">
 
 Version 03
+ - Increased ability to support adding/removing patterns.
  - Ready to extend pattern
  - Give meaning according to the needs.
 
 Version 02
  - Fix the issue if the pattern doesn't match the layer.
- - Increased ability to support adding/removing patterns.
 
 Version 01
  - Fix pattern
