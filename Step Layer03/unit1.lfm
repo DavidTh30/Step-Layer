@@ -434,6 +434,7 @@ object Form1: TForm1
         Lines.Strings = (
           'Memo1'
         )
+        ParentFont = False
         TabOrder = 13
         WordWrap = False
       end

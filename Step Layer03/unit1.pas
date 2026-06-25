@@ -492,8 +492,8 @@ begin
           IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN begin Device[Pattern1[Pattern1Index]].Start:=true; end;
         end;
         IF (Pattern1Index>LastPattern) THEN Pattern1Index:=LastPattern;// Pattern1Index:=High(Layer);
-        if InLength_(Pattern1Index) then
-        if InLengthLayer(Pattern1[Pattern1Index]) then
+        IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+        IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN
         if ((Not Device[Pattern1[Pattern1Index]].Enable) and Device[Pattern1[Pattern1Index]].Start) or (Device[Pattern1[Pattern1Index]].Start and Device[Pattern1[Pattern1Index]].EndOfCounterDuration) then
         begin
           PreEndLoop:=false;
