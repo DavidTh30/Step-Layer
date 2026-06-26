@@ -33,6 +33,7 @@ type
     CheckBox1: TCheckBox;
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
+    CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     CheckBox6: TCheckBox;
     CheckBox8: TCheckBox;
@@ -174,6 +175,7 @@ var
   LastDevice:INT = 5;   //Last device (Total device)
   EndDevice:INT =6;     //End Layer is use for only have one device left
   TotalScanDevice:INT =6; //[Total Device] + [End]
+  LastPatternIndex:INT =0;  //Last index in pattern that device enable
   //----------------------------------------------------------
 
   StartStepLayer:BOOL = false; //Start cycle function
@@ -429,10 +431,11 @@ begin
       Device[i].Mark :=false;
     end;
 
+    LastPatternIndex:=0;   //begin initiate LastPatternIndex
     FOR i := FirstPattern TO LastPattern DO  //Check pattern
     begin
       IF (Pattern1[i] >= FirstDevice) AND (Pattern1[i] <= LastDevice) THEN
-      if (Device[Pattern1[i]].Enable) then begin Device[Pattern1[i]].Mark:=true; end;
+      if (Device[Pattern1[i]].Enable) then begin Device[Pattern1[i]].Mark:=true; LastPatternIndex:=i; end;
     end;
 
     FOR i := FirstDevice TO LastDevice DO  //Check Mark Device
@@ -512,7 +515,15 @@ begin
       begin   // Any begin to next/skip layer then recalculate
         if (not Device[EndDevice].Enable) or (not Device[EndDevice].Start) or (Device[EndDevice].Start and Device[EndDevice].EndOfCounterDuration) then
         begin
-          Pattern1Index:=0;
+          if CheckBox2.Checked then
+          begin
+            Pattern1Index:=LastPatternIndex;
+            Device[Pattern1[LastPatternIndex]].Start:=true;
+            Device[Pattern1[LastPatternIndex]].CounterDurationTime_Act:=0;
+            Device[Pattern1[LastPatternIndex]].RunDurationTime_Act:=0;
+            Device[Pattern1[LastPatternIndex]].EndOfCounterDuration:=false;
+          end;
+          if not CheckBox2.Checked then Pattern1Index:=0;
           Device[EndDevice].Start:=false;
           PreEndLoop:=false;
         end;
@@ -676,6 +687,7 @@ begin
   LastDevice := High(Device)-1;   //Last device (Total device)
   EndDevice :=High(Device);     //End Layer is use for only have one device left or use as virtual device
   TotalScanDevice :=EndDevice; //[Total Device] + [End]
+  LastPatternIndex :=0; // 0 because not initiate yet
   //----------------------------------------------------------
 
   StartStepLayer:=false;
