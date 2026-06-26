@@ -126,7 +126,7 @@ type
     Function LowerLength_(Index_:integer):boolean;
     Function HigherLength_(Index_:integer):boolean;
   public
-
+    procedure AShapePaint(Sender: TObject);
   end;
 
   type
@@ -191,6 +191,7 @@ var
 
   MouseEnter_:integer;
 
+  AShape: array of TShape;
 implementation
 
 {$R *.lfm}
@@ -201,6 +202,18 @@ implementation
 //  slice1: TIntArray;
 //begin
 //  slice1 := Copy(MyStack, Low(MyStack), High(MyStack));
+
+procedure TForm1.AShapePaint(Sender: TObject);
+var
+  x_,y_:integer;
+begin
+  x_ := TShape(Sender).Width;
+  y_ := TShape(Sender).Height;
+  //showmessage(x_.ToString);
+  x_:=round(x_/2);
+  y_:=round(y_/2);
+  TShape(Sender).Canvas.TextOut(x_-5,y_-9,TShape(Sender).Tag.ToString);
+end;
 
 procedure Push(var Arr: TIntArray; Value: Integer);
 begin
@@ -747,6 +760,23 @@ begin
 
   if (CheckBox11.Checked) then Shape7.Brush.Color:=clGreen;
   if (not CheckBox11.Checked) then Shape7.Brush.Color:=clRed;
+
+  //SetLength(AShape, Length(AShape) + 1);
+  SetLength(AShape, 11);
+  for i := 0 to 12 do
+  begin
+    AShape[0]:= TShape.Create(TabSheet2);
+    AShape[0].Parent := TabSheet2;
+    AShape[0].Tag:=i;
+    AShape[0].Visible:=true;
+    AShape[0].Top:=5;
+    AShape[0].Left:=5+(i*50);
+    AShape[0].Width:=50;
+    AShape[0].Height:=50;
+    AShape[0].Shape := stRectangle; // Options: stRectangle, stSquare, stEllipse, etc.
+    AShape[0].Brush.Color:=clWhite;
+    AShape[0].OnPaint:= @AShapePaint;
+  end;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
