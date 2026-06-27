@@ -89,6 +89,7 @@ type
     procedure CheckBox10EditingDone(Sender: TObject);
     procedure CheckBox11EditingDone(Sender: TObject);
     procedure CheckBox1EditingDone(Sender: TObject);
+    procedure CheckBox2EditingDone(Sender: TObject);
     procedure CheckBox3EditingDone(Sender: TObject);
     procedure CheckBox6EditingDone(Sender: TObject);
     procedure CheckBox8EditingDone(Sender: TObject);
@@ -158,8 +159,8 @@ var
   //Pattern1: array[1..5] of integer = (0,5,3,0,4);
 
   //Array Pattern:=[init 0] [Data 1...10] [END 11]
-  Pattern1: array of integer = (0, 0, 2, 1, 5, 4,
-                                   3, 0, 5, 2, 1,
+  Pattern1: array of integer = (0, 0, 1, 2, 3, 4,
+                                   0, 0, 0, 0, 5,
                                 0);  //Pattern[0] is start   Pattern[11] is End
 
   //----------------------------------------------------------
@@ -175,7 +176,9 @@ var
   LastDevice:INT = 5;   //Last device (Total device)
   EndDevice:INT =6;     //End Layer is use for only have one device left
   TotalScanDevice:INT =6; //[Total Device] + [End]
+  FirstPatternIndex:INT =0;  //First index in pattern that device enable
   LastPatternIndex:INT =0;  //Last index in pattern that device enable
+  ActiveRestartPattern: BOOL =true;
   //----------------------------------------------------------
 
   StartStepLayer:BOOL = false; //Start cycle function
@@ -282,7 +285,9 @@ begin
                    '  - Pattern1Run:= ' + StartStepLayer.ToInteger.ToString + chr(13)+
                    '  - Pattern1Index:= ' + Pattern1Index.ToString + chr(13)+
                    '  - LastDeviceActive:= ' + LastDeviceActive.ToInteger.ToString + chr(13)+
-                   '  - AllDeviceDisable:= ' + AllDeviceDisable.ToInteger.ToString + chr(13);
+                   '  - AllDeviceDisable:= ' + AllDeviceDisable.ToInteger.ToString + chr(13)+
+                   '  - FirstPatternIndex:= ' + FirstPatternIndex.ToString + chr(13)+
+                   '  - LastPatternIndex:= ' + LastPatternIndex.ToString + chr(13);
   end;
 
   if MouseEnter_=1 then
@@ -428,7 +433,7 @@ var
   CounterLayer:integer;
   CurrentDevice:integer;
   EndLoop:boolean;
-  PreEndLoop:boolean;
+  VirtualLoop:boolean;
   Tempo:integer;
 begin
   CurrentDevice:=0;
@@ -444,11 +449,16 @@ begin
       Device[i].Mark :=false;
     end;
 
+    FirstPatternIndex:=0;  //begin initiate FirstPatternIndex
     LastPatternIndex:=0;   //begin initiate LastPatternIndex
     FOR i := FirstPattern TO LastPattern DO  //Check pattern
     begin
       IF (Pattern1[i] >= FirstDevice) AND (Pattern1[i] <= LastDevice) THEN
-      if (Device[Pattern1[i]].Enable) then begin Device[Pattern1[i]].Mark:=true; LastPatternIndex:=i; end;
+      if (Device[Pattern1[i]].Enable) then
+      begin
+        if (FirstPatternIndex=0) then FirstPatternIndex:=i;
+        Device[Pattern1[i]].Mark:=true; LastPatternIndex:=i;
+      end;
     end;
 
     FOR i := FirstDevice TO LastDevice DO  //Check Mark Device
@@ -456,26 +466,122 @@ begin
       if (Device[i].Mark=false) then begin CounterLayer:=CounterLayer+1; end;
     end;
 
-    if (CounterLayer=LastDevice-1) then LastDeviceActive:=true;  //High(Layer)-2 =4
-    if (CounterLayer=LastDevice) then AllDeviceDisable:=true;  //High(Layer)-1 =5
+    if (CounterLayer=LastDevice-1) then LastDeviceActive:=true;
+    if (CounterLayer=LastDevice) then AllDeviceDisable:=true;
 
-    if (not AllDeviceDisable) and (Pattern1Index=0)then
+    //Main cycle loop
+    EndLoop:=false;
+    VirtualLoop:=false;
+    if (not Device[EndDevice].Start) then
+    if (not AllDeviceDisable) and (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern)then
     begin
-      for i2 := FirstPattern TO LastPattern DO
+      if (Pattern1[Pattern1Index]>=FirstDevice) and (Pattern1[Pattern1Index]<=LastDevice) THEN
+      if Device[Pattern1[Pattern1Index]].EndOfCounterDuration or (not Device[Pattern1[Pattern1Index]].Enable) then
       begin
-        Pattern1Index:=Pattern1Index+1;
-        IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
+        if (LastDeviceActive) then
         begin
-          IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN
+          EndLoop:=true;
+          Device[Pattern1[Pattern1Index]].Start:=false;
+          if ActiveRestartPattern then
           begin
-            //Tempo:=Low(Layer);
-            //Tempo:=High(Layer);
-            Tempo:=Pattern1[Pattern1Index];
+            if Device[EndDevice].Enable then VirtualLoop:=true;
+            Pattern1Index:=0;
+          end;
+          if not ActiveRestartPattern then
+          begin
+            if Device[EndDevice].Enable then
+              VirtualLoop:=true
+            else
+            begin
+              Pattern1Index:=LastPatternIndex;
+              Device[Pattern1[Pattern1Index]].Start:=true;
+            end;
+          end;
+        end;
+        if (not LastDeviceActive) then
+          for i2 := FirstPattern TO LastPattern DO
+          begin
+            if (Pattern1[i2]>=FirstDevice) and (Pattern1[i2]<=LastDevice) THEN
+            if (Device[Pattern1[i2]].Enable and (i2 > Pattern1Index)) then
+            begin
+              Device[Pattern1[Pattern1Index]].Start:=false;
+              Pattern1Index:=i2;
+              Device[Pattern1[Pattern1Index]].Start:=true;
+              break;
+            end;
+          end;
+        if (Device[Pattern1[Pattern1Index]].EndOfCounterDuration or (not Device[Pattern1[Pattern1Index]].Enable)) and (not LastDeviceActive) then
+        begin
+          EndLoop:=true;
+          Device[Pattern1[Pattern1Index]].Start:=false;
+          if ActiveRestartPattern then Pattern1Index:=0;
+          if not ActiveRestartPattern then
+          begin
+            Pattern1Index:=FirstPatternIndex;
+            Device[Pattern1[Pattern1Index]].Start:=true;
+          end;
+        end;
+      end;
+    end;
+
+    if (VirtualLoop or Device[EndDevice].Start)then
+    begin
+      Device[EndDevice].Start:=true;
+      if (Device[EndDevice].EndOfCounterDuration or (not Device[EndDevice].Enable)) then
+      begin
+        Device[EndDevice].start:=false;
+        //----------------------------------------------------------------------------------------
+        //if (LastDeviceActive) then
+        //begin
+          EndLoop:=true;
+          if ActiveRestartPattern then
+          begin
+            Pattern1Index:=0;
+          end;
+          if not ActiveRestartPattern then
+          begin
+            Pattern1Index:=LastPatternIndex;
+            Device[Pattern1[Pattern1Index]].Start:=true;
+          end;
+        //end;
+        //----------------------------------------------------------------------------------------
+      end;
+    end;
+
+    //Set index with start (Not for virtual)
+    if (not Device[EndDevice].Start) then
+    if not EndLoop then
+    if (not AllDeviceDisable) and ((Pattern1Index<FirstPattern) or (Pattern1Index>LastPattern)) then
+    begin
+      if (LastDeviceActive) then
+      begin
+        if Not Device[Pattern1[Pattern1Index]].EndOfCounterDuration then
+        begin
+          Pattern1Index:=LastPatternIndex;
+          Device[Pattern1[Pattern1Index]].Start:=true;
+        end;
+        if Device[Pattern1[Pattern1Index]].EndOfCounterDuration then
+        begin
+          Device[Pattern1[Pattern1Index]].Start:=false;
+          if ActiveRestartPattern then Pattern1Index:=0;
+          if not ActiveRestartPattern then
+          begin
+            Pattern1Index:=LastPatternIndex;
+            Device[Pattern1[Pattern1Index]].Start:=true;
+          end;
+        end;
+      end;
+      if (not LastDeviceActive) then
+        for i2 := FirstPattern TO LastPattern DO
+        begin
+          if (Pattern1[i2]>=FirstDevice) and (Pattern1[i2]<=LastDevice) THEN
+          if (Device[Pattern1[i2]].Enable and (i2 <> Pattern1Index)) then
+          begin
+            Pattern1Index:=i2;
             Device[Pattern1[Pattern1Index]].Start:=true;
             break;
           end;
         end;
-      end;
     end;
 
     if(AllDeviceDisable)then
@@ -487,74 +593,6 @@ begin
       end;
     end;
 
-    //Set index with start  //Main cycle loop
-    EndLoop:=false;
-    PreEndLoop:=false;
-    i:=FirstPattern;
-    repeat
-      PreEndLoop:=true;
-      // Any case begin to next/skip Device then recalculate
-      IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-      begin
-        IF (Pattern1[Pattern1Index]<FirstDevice) OR (Pattern1[Pattern1Index]>LastDevice) THEN
-        begin
-          PreEndLoop:=false;
-          FOR i2 := FirstPattern TO LastPattern DO
-          begin
-            IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-            IF (Pattern1[Pattern1Index]<FirstDevice) OR (Pattern1[Pattern1Index]>LastDevice) THEN begin Pattern1Index:=Pattern1Index+1; end;
-          end;
-          IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-          IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN begin Device[Pattern1[Pattern1Index]].Start:=true; end;
-        end;
-        IF (Pattern1Index>LastPattern) THEN Pattern1Index:=LastPattern;// Pattern1Index:=High(Layer);
-        IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-        IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN
-        if ((Not Device[Pattern1[Pattern1Index]].Enable) and Device[Pattern1[Pattern1Index]].Start) or (Device[Pattern1[Pattern1Index]].Start and Device[Pattern1[Pattern1Index]].EndOfCounterDuration) then
-        begin
-          PreEndLoop:=false;
-          Device[Pattern1[Pattern1Index]].Start:=false;
-          Pattern1Index:=Pattern1Index+1;
-          IF (Pattern1Index>=FirstPattern) AND (Pattern1Index<=LastPattern) THEN
-          IF (Pattern1[Pattern1Index]>=FirstDevice) AND (Pattern1[Pattern1Index]<=LastDevice) THEN begin Device[Pattern1[Pattern1Index]].Start:=true; end;
-          IF (Pattern1Index>LastPattern) THEN  Device[EndDevice].Start:=true;
-        end;
-      end;
-      if (i=LastPattern) and (Pattern1Index<FirstPattern) then
-      begin
-        PreEndLoop:=true;
-      end;
-      IF (Pattern1Index>LastPattern) THEN
-      begin   // Any begin to next/skip layer then recalculate
-        if (not Device[EndDevice].Enable) or (not Device[EndDevice].Start) or (Device[EndDevice].Start and Device[EndDevice].EndOfCounterDuration) then
-        begin
-          if CheckBox2.Checked then
-          begin
-            Pattern1Index:=LastPatternIndex;
-            Device[Pattern1[LastPatternIndex]].Start:=true;
-            Device[Pattern1[LastPatternIndex]].CounterDurationTime_Act:=0;
-            Device[Pattern1[LastPatternIndex]].RunDurationTime_Act:=0;
-            Device[Pattern1[LastPatternIndex]].EndOfCounterDuration:=false;
-          end;
-          if not CheckBox2.Checked then Pattern1Index:=0;
-          Device[EndDevice].Start:=false;
-          PreEndLoop:=false;
-        end;
-        if (Device[EndDevice].Enable and (not LastDeviceActive) and Device[EndDevice].Start) then
-        begin
-          Pattern1Index:=0;
-          Device[EndDevice].Start:=false;
-          PreEndLoop:=True;
-        end;
-      end;
-
-      i:=i+1;
-      if i>LastPattern then
-      begin
-        i:=FirstPattern;
-        if PreEndLoop then EndLoop:=true;
-      end;
-    until EndLoop;
 
     //Auto Duration time process ** not for Start/Skip device
     for i := FirstDevice to EndDevice do
@@ -701,6 +739,7 @@ begin
   EndDevice :=High(Device);     //End Layer is use for only have one device left or use as virtual device
   TotalScanDevice :=EndDevice; //[Total Device] + [End]
   LastPatternIndex :=0; // 0 because not initiate yet
+  ActiveRestartPattern:= CheckBox2.Checked;
   //----------------------------------------------------------
 
   StartStepLayer:=false;
@@ -788,6 +827,11 @@ procedure TForm1.CheckBox1EditingDone(Sender: TObject);
 begin
   if (CheckBox1.Checked) then begin Device[1].Enable:=true; Shape2.Brush.Color:=clGreen; end;
   if (not CheckBox1.Checked) then begin Device[1].Enable:=false; Shape2.Brush.Color:=clRed; end;
+end;
+
+procedure TForm1.CheckBox2EditingDone(Sender: TObject);
+begin
+  ActiveRestartPattern:= CheckBox2.Checked;
 end;
 
 procedure TForm1.CheckBox10EditingDone(Sender: TObject);
