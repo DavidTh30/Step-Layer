@@ -54,6 +54,7 @@ type
     Label8: TLabel;
     Label9: TLabel;
     Memo1: TMemo;
+    Memo2: TMemo;
     PageControl1: TPageControl;
     Shape1: TShape;
     Shape10: TShape;
@@ -82,6 +83,7 @@ type
     SpinEdit6: TSpinEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -127,6 +129,7 @@ type
     Function LowerLength_(Index_:integer):boolean;
     Function HigherLength_(Index_:integer):boolean;
   public
+    procedure Log(Line:string;Msg:string; Memo:TMemo);
     procedure AShapePaint(Sender: TObject);
   end;
 
@@ -205,6 +208,11 @@ implementation
 //  slice1: TIntArray;
 //begin
 //  slice1 := Copy(MyStack, Low(MyStack), High(MyStack));
+
+procedure TForm1.Log(Line:string;Msg:string; Memo:TMemo);
+begin
+  Memo.Append('Line:'+Line+ ' value=' + Msg);
+end;
 
 procedure TForm1.AShapePaint(Sender: TObject);
 var
@@ -481,6 +489,7 @@ begin
         if (LastDeviceActive) then
         begin
           EndLoop:=true;
+          Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
           Device[Pattern1[Pattern1Index]].Start:=false;
           if ActiveRestartPattern then
           begin
@@ -494,6 +503,7 @@ begin
             else
             begin
               Pattern1Index:=LastPatternIndex;
+              Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
               Device[Pattern1[Pattern1Index]].Start:=true;
             end;
           end;
@@ -504,11 +514,13 @@ begin
             if (Pattern1[i2]>=FirstDevice) and (Pattern1[i2]<=LastDevice) THEN
             if (Device[Pattern1[i2]].Enable and (i2 > Pattern1Index)) then
             begin
+              Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
               Device[Pattern1[Pattern1Index]].Start:=false;
-			  Device[Pattern1[Pattern1Index]].CounterDurationTime_Act := 0;
+	      Device[Pattern1[Pattern1Index]].CounterDurationTime_Act := 0;
               Device[Pattern1[Pattern1Index]].RunDurationTime_Act := 0;
               Device[Pattern1[Pattern1Index]].EndOfCounterDuration:=false;
               Pattern1Index:=i2;
+              Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
               Device[Pattern1[Pattern1Index]].Start:=true;
               break;
             end;
@@ -516,11 +528,13 @@ begin
         if (Device[Pattern1[Pattern1Index]].EndOfCounterDuration or (not Device[Pattern1[Pattern1Index]].Enable)) and (not LastDeviceActive) then
         begin
           EndLoop:=true;
+          Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
           Device[Pattern1[Pattern1Index]].Start:=false;
           if ActiveRestartPattern then Pattern1Index:=0;
           if not ActiveRestartPattern then
           begin
             Pattern1Index:=FirstPatternIndex;
+            Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
             Device[Pattern1[Pattern1Index]].Start:=true;
           end;
         end;
@@ -545,6 +559,7 @@ begin
           if not ActiveRestartPattern then
           begin
             Pattern1Index:=LastPatternIndex;
+            Log({$i %LINE%},Pattern1[Pattern1Index].ToString,Memo2);
             Device[Pattern1[Pattern1Index]].Start:=true;
           end;
         //end;

@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 613
+  Left = 426
   Height = 520
-  Top = 190
+  Top = 112
   Width = 745
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -471,6 +471,20 @@ object Form1: TForm1
         Caption = 'Button3'
         TabOrder = 1
         OnClick = Button3Click
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'Debug'
+      ClientHeight = 492
+      ClientWidth = 737
+      object Memo2: TMemo
+        Left = 16
+        Height = 464
+        Top = 16
+        Width = 250
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+        WordWrap = False
       end
     end
   end
