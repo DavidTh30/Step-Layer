@@ -8,12 +8,12 @@ object Form1: TForm1
   Caption = 'Step Layer 03'
   ClientHeight = 520
   ClientWidth = 745
+  Position = poWorkAreaCenter
+  LCLVersion = '4.4.0.0'
+  Scaled = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnPaint = FormPaint
-  Position = poWorkAreaCenter
-  LCLVersion = '3.4.0.0'
-  Scaled = False
   object PageControl1: TPageControl
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -290,9 +290,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit1EditingDone
         TabOrder = 7
         Value = 200
+        OnEditingDone = SpinEdit1EditingDone
       end
       object SpinEdit2: TSpinEdit
         Left = 218
@@ -301,9 +301,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit2EditingDone
         TabOrder = 8
         Value = 200
+        OnEditingDone = SpinEdit2EditingDone
       end
       object SpinEdit3: TSpinEdit
         Left = 218
@@ -312,9 +312,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit3EditingDone
         TabOrder = 9
         Value = 200
+        OnEditingDone = SpinEdit3EditingDone
       end
       object SpinEdit4: TSpinEdit
         Left = 218
@@ -323,9 +323,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit4EditingDone
         TabOrder = 10
         Value = 200
+        OnEditingDone = SpinEdit4EditingDone
       end
       object SpinEdit5: TSpinEdit
         Left = 218
@@ -334,9 +334,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit5EditingDone
         TabOrder = 11
         Value = 200
+        OnEditingDone = SpinEdit5EditingDone
       end
       object SpinEdit6: TSpinEdit
         Left = 218
@@ -345,9 +345,9 @@ object Form1: TForm1
         Width = 70
         MaxValue = 2000
         MinValue = 1
-        OnEditingDone = SpinEdit6EditingDone
         TabOrder = 12
         Value = 150
+        OnEditingDone = SpinEdit6EditingDone
       end
       object Label6: TLabel
         Left = 299

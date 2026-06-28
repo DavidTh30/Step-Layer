@@ -159,8 +159,8 @@ var
   //Pattern1: array[1..5] of integer = (0,5,3,0,4);
 
   //Array Pattern:=[init 0] [Data 1...10] [END 11]
-  Pattern1: array of integer = (0, 0, 1, 2, 3, 4,
-                                   0, 0, 0, 0, 5,
+  Pattern1: array of integer = (0, 1, 2, 3, 4, 5,
+                                   0, 0, 0, 0, 0,
                                 0);  //Pattern[0] is start   Pattern[11] is End
 
   //----------------------------------------------------------
@@ -186,13 +186,13 @@ var
   //Array Device:=[init 0] [DeviceID 1...5] [END(Virtual) 6]
   Device:array of Device_;
 
-  LastDeviceActive:boolean;
-  AllDeviceDisable:boolean;
+  LastDeviceActive:BOOL;
+  AllDeviceDisable:BOOL;
 
   EventsList: TStringList;
-  OldCurrentLayer:integer;
+  OldCurrentLayer:INT;
 
-  MouseEnter_:integer;
+  MouseEnter_:INT;
 
   AShape: array of TShape;
 implementation
@@ -428,13 +428,13 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
-  i:integer;
-  i2:integer;
-  CounterLayer:integer;
-  CurrentDevice:integer;
-  EndLoop:boolean;
-  VirtualLoop:boolean;
-  Tempo:integer;
+  i:INT;
+  i2:INT;
+  CounterLayer:INT;
+  CurrentDevice:INT;
+  EndLoop:BOOL;
+  VirtualLoop:BOOL;
+  Tempo:INT;
 begin
   CurrentDevice:=0;
   if (StartStepLayer) then
@@ -505,6 +505,9 @@ begin
             if (Device[Pattern1[i2]].Enable and (i2 > Pattern1Index)) then
             begin
               Device[Pattern1[Pattern1Index]].Start:=false;
+			  Device[Pattern1[Pattern1Index]].CounterDurationTime_Act := 0;
+              Device[Pattern1[Pattern1Index]].RunDurationTime_Act := 0;
+              Device[Pattern1[Pattern1Index]].EndOfCounterDuration:=false;
               Pattern1Index:=i2;
               Device[Pattern1[Pattern1Index]].Start:=true;
               break;
@@ -523,7 +526,8 @@ begin
         end;
       end;
     end;
-
+	
+    //Virtual loop
     if (VirtualLoop or Device[EndDevice].Start)then
     begin
       Device[EndDevice].Start:=true;
@@ -607,13 +611,15 @@ begin
       end;
       if (Device[i].CounterDurationTime_Act>=Device[i].CounterDurationTime_Set) then
       begin
-        Device[i].EndOfCounterDuration:=true;
+	    if Device[i].Start then Device[i].EndOfCounterDuration:=true;
+		if Not Device[i].Start then Device[i].EndOfCounterDuration:=false;
         Device[i].IS_StartUp:=false;
       end;
       if (Device[i].CounterDurationTime_Act<Device[i].CounterDurationTime_Set) then
       begin
         Device[i].EndOfCounterDuration:=false;
-        Device[i].IS_StartUp:=true;
+        if Device[i].Start then Device[i].IS_StartUp:=true;
+		if Not Device[i].Start then Device[i].IS_StartUp:=false;
       end;
       if Device[i].Start and Device[i].Enable then
       begin
