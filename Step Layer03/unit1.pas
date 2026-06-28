@@ -30,6 +30,7 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    Button4: TButton;
     CheckBox1: TCheckBox;
     CheckBox10: TCheckBox;
     CheckBox11: TCheckBox;
@@ -81,6 +82,7 @@ type
     SpinEdit4: TSpinEdit;
     SpinEdit5: TSpinEdit;
     SpinEdit6: TSpinEdit;
+    SpinEdit7: TSpinEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
@@ -223,7 +225,9 @@ begin
   //showmessage(x_.ToString);
   x_:=round(x_/2);
   y_:=round(y_/2);
-  TShape(Sender).Canvas.TextOut(x_-5,y_-9,TShape(Sender).Tag.ToString);
+  TShape(Sender).Canvas.TextOut(x_-5,y_-0,Pattern1[TShape(Sender).Tag].ToString);
+  TShape(Sender).Canvas.Font.Size:=6;
+  TShape(Sender).Canvas.TextOut(3,y_-18,TShape(Sender).Tag.ToString);
 end;
 
 procedure Push(var Arr: TIntArray; Value: Integer);
@@ -822,17 +826,18 @@ begin
   if (not CheckBox11.Checked) then Shape7.Brush.Color:=clRed;
 
   //SetLength(AShape, Length(AShape) + 1);
-  SetLength(AShape, 11);
-  for i := 0 to 12 do
+  SetLength(AShape, EndPattern);
+  for i := BeginPattern to EndPattern do
   begin
     AShape[0]:= TShape.Create(TabSheet2);
     AShape[0].Parent := TabSheet2;
     AShape[0].Tag:=i;
     AShape[0].Visible:=true;
     AShape[0].Top:=5;
-    AShape[0].Left:=5+(i*50);
-    AShape[0].Width:=50;
-    AShape[0].Height:=50;
+    if (i >= FirstPattern) and (i<=LastPattern) then AShape[0].Top:=7+40;
+    AShape[0].Left:=5+(i*40);
+    AShape[0].Width:=40;
+    AShape[0].Height:=40;
     AShape[0].Shape := stRectangle; // Options: stRectangle, stSquare, stEllipse, etc.
     AShape[0].Brush.Color:=clWhite;
     AShape[0].OnPaint:= @AShapePaint;
