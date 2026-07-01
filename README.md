@@ -5,7 +5,7 @@ Keyword:
  - TStringList
  - Step Event / Layer
 
-<img src="SS01.png" width="400" height="500">
+<img src="SS01.png" width="400" height="500"> <img src="SS02.png" width="400" height="500">
 
 Version 03
  - Increased ability to support adding/removing patterns.
