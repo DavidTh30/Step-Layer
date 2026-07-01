@@ -1,14 +1,14 @@
-DATA_BLOCK Device  //Array Device:=[init 0] + [5 Device/Layer/Type/ID] + [1 Virtual]
+DATA_BLOCK Device  //Array Device:=[init 0] + [5 Device/Layer/Type/ID + 5 Blank] + [1 Virtual]
     STRUCT // Declaration with initial values
-        Start : ARRAY [0..6] OF BOOL := 7 (false) ;
-        IS_StartUp : ARRAY [0..6] OF BOOL := 7 (false) ;
-        IS_Running : ARRAY [0..6] OF BOOL := 7 (false) ;
-        EndOfCounterDuration : ARRAY [0..6] OF BOOL := 7 (false) ;
-        CounterDurationTime_Act : ARRAY [0..6] OF INT := 7 (0) ;
-        RunDurationTime_Act : ARRAY[0..6] OF INT := 7 (0) ;
-        CounterDurationTime_Set : ARRAY [0..6] OF INT := 7 (200) ;
-        Enable : ARRAY [0..6] OF BOOL := 7 (true) ;
-        Mark : ARRAY [0..6] OF BOOL := 7 (false) ;
+        Start : ARRAY [0..11] OF BOOL := 12 (false) ;
+        IS_StartUp : ARRAY [0..11] OF BOOL := 12 (false) ;
+        IS_Running : ARRAY [0..11] OF BOOL := 12 (false) ;
+        EndOfCounterDuration : ARRAY [0..11] OF BOOL := 12 (false) ;
+        CounterDurationTime_Act : ARRAY [0..11] OF INT := 12 (0) ;
+        RunDurationTime_Act : ARRAY[0..11] OF INT := 12 (0) ;
+        CounterDurationTime_Set : ARRAY [0..11] OF INT := 12 (200) ;
+        Enable : ARRAY [0..11] OF BOOL := 12 (true) ;
+        Mark : ARRAY [0..11] OF BOOL := 12 (false) ;
     END_STRUCT
     BEGIN // Assignment section
 
@@ -19,9 +19,10 @@ FUNCTION_BLOCK StepLayer01  //Simulator: https://github.com/DavidTh30/Step-Layer
 
 VAR_INPUT
     
-    Pattern : ARRAY[0..11] OF INT:= 0, 3, 2, 1, 5, 4,
-                                       2, 0, 5, 2, 1, 
-                                    0;  //Pattern[0] is start   Pattern[11] is End
+    Pattern : ARRAY[0..11] OF INT:= 0, // Pattern[0] is start
+                                       1, 6, 2, 7, 3,    // device1 bank=6   device2 bank=7 ...  device5 bakn=10
+                                       8, 4, 9, 5, 10, 
+                                    0;  // Pattern[11] is End
     
     //Array Pattern:=[init 0] [Data 1...10] [END 11]
     //Array Device:=[init 0] [DeviceID 1...5] [END(Virtual) 6] 
@@ -45,9 +46,9 @@ VAR //Static
     
     InitBlankDevice:INT :=0;   //Init Blank Device number 0
     FirstDevice:INT := 1;  //First device
-    LastDevice:INT := 5;   //Last device (Total device)
-    EndDevice:INT :=6;     //End Layer is use for only have one device left or use as virtual device  
-    TotalScanDevice:INT :=6; //[Total Device] + [End]
+    LastDevice:INT := 10;   //Last device (Total device)
+    EndDevice:INT :=11;     //End Layer is use for only have one device left or use as virtual device  
+    TotalScanDevice:INT :=11; //[Total Device] + [End]
     //DO not change----------------------------------------------------------
     
     Pattern1Index:INT :=0; //Position 0 and Position 11 is for init
@@ -78,7 +79,10 @@ BEGIN
     CounterDevice:=0;
     LastDeviceActive:=false;
     AllDeviceDisable:=false;
-  
+    
+    //Relationshiip
+    // device1 blank=6   device2 blank=7 ...  device5 blakn=10
+    
     FOR i := FirstDevice TO LastDevice DO  //Reset device mark
       Device.Mark[i] := false;
     END_FOR;
