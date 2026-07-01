@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Spin, ComCtrls, Types;
+  Spin, ComCtrls, Types, simpleipc;
 
 type
 	Layer_ = record
@@ -56,6 +56,7 @@ type
     Label9: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
+    Memo3: TMemo;
     PageControl1: TPageControl;
     Shape1: TShape;
     Shape10: TShape;
@@ -76,6 +77,7 @@ type
     Shape7: TShape;
     Shape8: TShape;
     Shape9: TShape;
+    SimpleIPCClient1: TSimpleIPCClient;
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
     SpinEdit3: TSpinEdit;
@@ -87,6 +89,7 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     Timer1: TTimer;
+    Timer2: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -97,6 +100,7 @@ type
     procedure CheckBox3EditingDone(Sender: TObject);
     procedure CheckBox6EditingDone(Sender: TObject);
     procedure CheckBox8EditingDone(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormPaint(Sender: TObject);
@@ -124,6 +128,7 @@ type
     procedure TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     procedure ShowStatus();
     Function InLengthLayer(var Index_:integer):boolean;
@@ -133,6 +138,7 @@ type
   public
     procedure Log(Line:string;Msg:string; Memo:TMemo);
     procedure AShapePaint(Sender: TObject);
+    procedure FindActiveServers();
   end;
 
   type
@@ -165,7 +171,7 @@ var
 
   //Array Pattern:=[init 0] [Data 1...10] [END 11]
   Pattern1: array of integer = (0, 1, 2, 3, 4, 5,
-                                   0, 0, 0, 0, 0,
+                                   6, 0, 0, 0, 0,
                                 0);  //Pattern[0] is start   Pattern[11] is End
 
   //----------------------------------------------------------
@@ -200,6 +206,9 @@ var
   MouseEnter_:INT;
 
   AShape: array of TShape;
+
+  OldDevice:array of INT;
+
 implementation
 
 {$R *.lfm}
@@ -210,10 +219,50 @@ implementation
 //  slice1: TIntArray;
 //begin
 //  slice1 := Copy(MyStack, Low(MyStack), High(MyStack));
-
 procedure TForm1.Log(Line:string;Msg:string; Memo:TMemo);
 begin
   Memo.Append('Line:'+Line+ ' value=' + Msg);
+end;
+
+procedure TForm1.FindActiveServers();
+var
+  IPCClient: TSimpleIPCClient;
+  CandidateIDs: array[0..3] of string;// Or array of string for older FPC versions
+  SrvID: string;
+begin
+  timer2.Enabled:=false;
+  SimpleIPCClient1.Disconnect;
+  SimpleIPCClient1.Active:=false;
+
+  // List of IDs you expect or want to test for
+  //CandidateIDs := ['ServerOne', 'ServerTwo', 'AppInstance_123', 'MyServerID'];
+  CandidateIDs[0]:='Fluff01';
+  CandidateIDs[1]:='FluffSilo01';
+  CandidateIDs[2]:='Silo01';
+  CandidateIDs[3]:='Suction01';
+
+  IPCClient := TSimpleIPCClient.Create(nil);
+  try
+    for SrvID in CandidateIDs do
+    begin
+      IPCClient.ServerID := SrvID;
+      //IPCClient.Global := True; // Match the Global setting of your servers
+
+      if IPCClient.ServerRunning then
+      begin
+        Log({$i %LINE%},'Active server found with ID: '+ SrvID,Memo3);
+        SimpleIPCClient1.Disconnect;
+        SimpleIPCClient1.Active:=false;
+        SimpleIPCClient1.ServerID:=SrvID;
+        SimpleIPCClient1.Active:=true;
+        SimpleIPCClient1.Connect;
+        break;
+      end;
+    end;
+  finally
+    IPCClient.Free;
+  end;
+  timer2.Enabled:=true;
 end;
 
 procedure TForm1.AShapePaint(Sender: TObject);
@@ -284,12 +333,12 @@ End;
 procedure TForm1.ShowStatus();
 begin
 
-  Label6.Caption:=Device[1].CounterDurationTime_Act.ToString+' t';
+  Label6.Caption:=Device[FirstDevice].CounterDurationTime_Act.ToString+' t';
   Label7.Caption:=Device[2].CounterDurationTime_Act.ToString+' t';
   Label8.Caption:=Device[3].CounterDurationTime_Act.ToString+' t';
   Label9.Caption:=Device[4].CounterDurationTime_Act.ToString+' t';
   Label10.Caption:=Device[5].CounterDurationTime_Act.ToString+' t';
-  Label11.Caption:=Device[6].CounterDurationTime_Act.ToString+' t';
+  Label11.Caption:=Device[EndDevice].CounterDurationTime_Act.ToString+' t';
 
   if MouseEnter_=0 then
   begin
@@ -429,7 +478,7 @@ end;
 
 procedure TForm1.SpinEdit6EditingDone(Sender: TObject);
 begin
-  Device[6].CounterDurationTime_Set:=SpinEdit6.Value;
+  Device[EndDevice].CounterDurationTime_Set:=SpinEdit6.Value;
 end;
 
 procedure TForm1.TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
@@ -694,15 +743,20 @@ begin
       Shape13.Top:=Shape17.Top;
       CurrentDevice:=4;
     end;
-    if Device[LastDevice].Start then
+    if Device[FirstDevice+4].Start then
     begin
       Shape13.Top:=Shape18.Top;
       CurrentDevice:=5;
     end;
+    if Device[LastDevice].Start then
+    begin
+      //Shape13.Top:=Shape18.Top;
+      CurrentDevice:=6;
+    end;
     if Device[EndDevice].Start then
     begin
       Shape13.Top:=Shape19.Top;
-      CurrentDevice:=6;
+      CurrentDevice:=7;
     end;
 
   if CurrentDevice<>OldCurrentLayer then
@@ -722,13 +776,58 @@ begin
 
 end;
 
+procedure TForm1.Timer2Timer(Sender: TObject);
+var
+  i:integer;
+begin
+
+  if High(OldDevice)<>High(Device)then
+  begin
+    SetLength(OldDevice, Length(Device));
+    for i:= Low(Device) to High(Device) do
+    begin
+      OldDevice[i]:=-1;
+    end;
+  end;
+
+  if not SimpleIPCClient1.ServerRunning then
+  begin
+    Log({$i %LINE%},'Server= off',Memo3);
+    FindActiveServers();
+    for i:= Low(Device) to High(Device) do
+    begin
+      OldDevice[i]:=-1;
+    end;
+  end;
+  if SimpleIPCClient1.ServerRunning then
+  begin
+    for i:= FirstDevice to LastDevice do
+    begin
+      if (Device[i].Start) and (OldDevice[i]<>1) then
+      begin
+        OldDevice[i]:=1;
+        Log({$i %LINE%},'Send message to Server',Memo3);
+        SimpleIPCClient1.SendStringMessage('Device'+i.ToString+'=On');
+      end;
+      if (not Device[i].Start) and (OldDevice[i]<>0) then
+      begin
+        OldDevice[i]:=0;
+        Log({$i %LINE%},'Send message to Server',Memo3);
+        SimpleIPCClient1.Connect;
+        SimpleIPCClient1.SendStringMessage('Device'+i.ToString+'=Off');
+        //SimpleIPCClient1.Disconnect;
+      end;
+    end;
+  end
+end;
+
 procedure TForm1.Shape1Paint(Sender: TObject);
 var
   x_,y_:integer;
 begin
   x_:=round(shape1.Width/2);
   y_:=round(shape1.Height/2);
-  Shape1.Canvas.TextOut(5,y_-9,'0 [Start (Blank)]');
+  Shape1.Canvas.TextOut(5,y_-9,InitBlankDevice.ToString+' [Start (Blank)]');
 end;
 
 procedure TForm1.Shape2MouseEnter(Sender: TObject);
@@ -740,15 +839,14 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   i:integer;
 begin
-
   //Array Pattern:=[init 0] [Data 1...10] [END 11]
   //SetLength(Pattern1, 11);
   //Pattern1:=[0, 0, 2, 1, 5, 4,
   //              3, 0, 5, 2, 1,
   //           0];
 
-  //Array Device:=[init 0] [DeviceID 1...5] [END(Virtual) 6]
-  SetLength(Device, 7);
+  //Array Device:=[init 0] [DeviceID 1...5] [DeviceID 6 (Hold/Virtual)] [END(Virtual) 7]
+  SetLength(Device, 8);
 
   //initiate----------------------------------------------------------
   Pattern1Index :=0; //Position 0 and Position 11 is for init
@@ -798,14 +896,16 @@ begin
   Device[3].Enable:=CheckBox6.Checked;
   Device[4].Enable:=CheckBox8.Checked;
   Device[5].Enable:=CheckBox10.Checked;
-  Device[6].Enable:=CheckBox11.Checked;
+  Device[LastDevice].Enable:=true;
+  Device[EndDevice].Enable:=CheckBox11.Checked;
 
   Device[1].CounterDurationTime_Set:=SpinEdit1.Value;
   Device[2].CounterDurationTime_Set:=SpinEdit2.Value;
   Device[3].CounterDurationTime_Set:=SpinEdit3.Value;
   Device[4].CounterDurationTime_Set:=SpinEdit4.Value;
   Device[5].CounterDurationTime_Set:=SpinEdit5.Value;
-  Device[6].CounterDurationTime_Set:=SpinEdit6.Value;
+  Device[LastDevice].CounterDurationTime_Set:=100;
+  Device[EndDevice].CounterDurationTime_Set:=SpinEdit6.Value;
 
   if (CheckBox1.Checked) then Shape2.Brush.Color:=clGreen;
   if (not CheckBox1.Checked) then Shape2.Brush.Color:=clRed;
@@ -868,8 +968,8 @@ end;
 
 procedure TForm1.CheckBox11EditingDone(Sender: TObject);
 begin
-  if (CheckBox11.Checked) then begin Device[6].Enable:=true; Shape7.Brush.Color:=clGreen; end;
-  if (not CheckBox11.Checked) then begin Device[6].Enable:=false; Shape7.Brush.Color:=clRed; end;
+  if (CheckBox11.Checked) then begin Device[EndDevice].Enable:=true; Shape7.Brush.Color:=clGreen; end;
+  if (not CheckBox11.Checked) then begin Device[EndDevice].Enable:=false; Shape7.Brush.Color:=clRed; end;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -952,6 +1052,12 @@ procedure TForm1.CheckBox8EditingDone(Sender: TObject);
 begin
   if (CheckBox8.Checked) then begin Device[4].Enable:=true; Shape5.Brush.Color:=clGreen; end;
   if (not CheckBox8.Checked) then begin Device[4].Enable:=false; Shape5.Brush.Color:=clRed; end;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  Timer2.Enabled:=false;
+  SimpleIPCClient1.Disconnect;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
@@ -1040,7 +1146,7 @@ var
 begin
   x_:=round(shape19.Width/2);
   y_:=round(shape19.Height/2);
-  Shape19.Canvas.TextOut(5,y_-9,'6 [END (Virtual)]');
+  Shape19.Canvas.TextOut(5,y_-9,EndDevice.ToString+' [END (Virtual)]');
 end;
 
 end.
