@@ -138,7 +138,9 @@ type
   public
     procedure Log(Line:string;Msg:string; Memo:TMemo);
     procedure AShapePaint(Sender: TObject);
-    procedure FindActiveServers();
+    procedure FindActiveServers(); //Don't use because not good
+    procedure SendMessage_(s:String);
+    Function DetectServer():boolean;
   end;
 
   type
@@ -224,7 +226,7 @@ begin
   Memo.Append('Line:'+Line+ ' value=' + Msg);
 end;
 
-procedure TForm1.FindActiveServers();
+procedure TForm1.FindActiveServers();  //Don't use because not good
 var
   IPCClient: TSimpleIPCClient;
   CandidateIDs: array[0..3] of string;// Or array of string for older FPC versions
@@ -263,6 +265,77 @@ begin
     IPCClient.Free;
   end;
   timer2.Enabled:=true;
+end;
+
+Function TForm1.DetectServer():boolean;
+var
+  IPCClient: TSimpleIPCClient;
+  CandidateIDs: array[0..3] of string;
+  SrvID: string;
+  Detect:boolean;
+begin
+
+  //CandidateIDs := ['ServerOne', 'ServerTwo', 'AppInstance_123', 'MyServerID'];
+  CandidateIDs[0]:='Fluff01';
+  CandidateIDs[1]:='FluffSilo01';
+  CandidateIDs[2]:='Silo01';
+  CandidateIDs[3]:='Suction01';
+
+  IPCClient := TSimpleIPCClient.Create(nil);
+  try
+    Detect:=false;
+    for SrvID in CandidateIDs do
+    begin
+      IPCClient.ServerID := SrvID;
+      if IPCClient.ServerRunning then
+      begin
+        Detect:=true;
+        break;
+      end;
+    end;
+  finally
+    IPCClient.Disconnect;
+    IPCClient.Active:=false;
+    IPCClient.Free;
+  end;
+
+    result := Detect;
+end;
+
+procedure TForm1.SendMessage_(s:String);
+var
+  IPCClient: TSimpleIPCClient;
+  CandidateIDs: array[0..3] of string;// Or array of string for older FPC versions
+  SrvID: string;
+begin
+
+  // List of IDs you expect or want to test for
+  //CandidateIDs := ['ServerOne', 'ServerTwo', 'AppInstance_123', 'MyServerID'];
+  CandidateIDs[0]:='Fluff01';
+  CandidateIDs[1]:='FluffSilo01';
+  CandidateIDs[2]:='Silo01';
+  CandidateIDs[3]:='Suction01';
+
+  IPCClient := TSimpleIPCClient.Create(nil);
+  try
+    for SrvID in CandidateIDs do
+    begin
+      IPCClient.ServerID := SrvID;
+      //IPCClient.Global := True; // Match the Global setting of your servers
+
+      if IPCClient.ServerRunning then
+      begin
+        IPCClient.Active:=true;
+        IPCClient.Connect;
+        IPCClient.SendStringMessage(s);
+        break;
+      end;
+    end;
+  finally
+    IPCClient.Disconnect;
+    IPCClient.Active:=false;
+    IPCClient.Free;
+  end;
 end;
 
 procedure TForm1.AShapePaint(Sender: TObject);
@@ -790,16 +863,15 @@ begin
     end;
   end;
 
-  if not SimpleIPCClient1.ServerRunning then
+  if not DetectServer() then
   begin
     Log({$i %LINE%},'Server= off',Memo3);
-    FindActiveServers();
     for i:= Low(Device) to High(Device) do
     begin
       OldDevice[i]:=-1;
     end;
   end;
-  if SimpleIPCClient1.ServerRunning then
+  if DetectServer() then
   begin
     for i:= FirstDevice to LastDevice do
     begin
@@ -807,18 +879,17 @@ begin
       begin
         OldDevice[i]:=1;
         Log({$i %LINE%},'Send message to Server',Memo3);
-        SimpleIPCClient1.SendStringMessage('Device'+i.ToString+'=On');
+        SendMessage_('Device'+i.ToString+'=On');
       end;
       if (not Device[i].Start) and (OldDevice[i]<>0) then
       begin
         OldDevice[i]:=0;
         Log({$i %LINE%},'Send message to Server',Memo3);
-        SimpleIPCClient1.Connect;
-        SimpleIPCClient1.SendStringMessage('Device'+i.ToString+'=Off');
-        //SimpleIPCClient1.Disconnect;
+        SendMessage_('Device'+i.ToString+'=Off');
       end;
     end;
   end
+
 end;
 
 procedure TForm1.Shape1Paint(Sender: TObject);
