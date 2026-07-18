@@ -46,6 +46,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure Edit1Change(Sender: TObject);
     procedure Edit1EditingDone(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SimpleIPCServer1Message(Sender: TObject);
@@ -166,6 +167,11 @@ begin
   SimpleIPCServer1.ServerID:=Edit1.Text;
   SimpleIPCServer1.StartServer;
   SimpleIPCServer1.Active := true;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  SimpleIPCServer1.StopServer;
 end;
 
 end.
