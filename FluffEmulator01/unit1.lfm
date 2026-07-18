@@ -1,0 +1,251 @@
+object Form1: TForm1
+  Left = 461
+  Height = 425
+  Top = 140
+  Width = 500
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
+  Caption = 'Fluff01'
+  ClientHeight = 425
+  ClientWidth = 500
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poWorkAreaCenter
+  LCLVersion = '3.4.0.0'
+  Scaled = False
+  object PageControl1: TPageControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 425
+    Top = 0
+    Width = 500
+    ActivePage = TabSheet1
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    TabIndex = 0
+    TabOrder = 0
+    object TabSheet1: TTabSheet
+      Caption = 'Emulator'
+      ClientHeight = 397
+      ClientWidth = 492
+      object Shape7: TShape
+        Left = 32
+        Height = 240
+        Top = 24
+        Width = 129
+      end
+      object Shape8: TShape
+        Left = 40
+        Height = 32
+        Top = 224
+        Width = 46
+      end
+      object Shape1: TShape
+        Left = 72
+        Height = 30
+        Top = 192
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape2: TShape
+        Left = 96
+        Height = 30
+        Top = 160
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape3: TShape
+        Left = 120
+        Height = 30
+        Top = 128
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape4: TShape
+        Left = 56
+        Height = 30
+        Top = 80
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape5: TShape
+        Left = 96
+        Height = 30
+        Top = 32
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape6: TShape
+        Left = 48
+        Height = 30
+        Top = 224
+        Width = 29
+        Shape = stCircle
+      end
+      object Shape9: TShape
+        Left = 32
+        Height = 65
+        Top = 264
+        Width = 26
+      end
+      object Shape10: TShape
+        Left = 135
+        Height = 65
+        Top = 264
+        Width = 26
+      end
+      object Label1: TLabel
+        Left = 200
+        Height = 15
+        Top = 208
+        Width = 47
+        Caption = 'Device01'
+      end
+      object Label3: TLabel
+        Left = 200
+        Height = 15
+        Top = 175
+        Width = 47
+        Caption = 'Device02'
+      end
+      object Label4: TLabel
+        Left = 200
+        Height = 15
+        Top = 143
+        Width = 47
+        Caption = 'Device03'
+      end
+      object Label5: TLabel
+        Left = 200
+        Height = 15
+        Top = 95
+        Width = 47
+        Caption = 'Device04'
+      end
+      object Label6: TLabel
+        Left = 200
+        Height = 15
+        Top = 47
+        Width = 47
+        Caption = 'Device05'
+      end
+      object Shape11: TShape
+        Left = 104
+        Height = 2
+        Top = 215
+        Width = 88
+      end
+      object Shape12: TShape
+        Left = 128
+        Height = 2
+        Top = 183
+        Width = 64
+      end
+      object Shape13: TShape
+        Left = 152
+        Height = 2
+        Top = 150
+        Width = 40
+      end
+      object Shape14: TShape
+        Left = 88
+        Height = 2
+        Top = 102
+        Width = 104
+      end
+      object Shape15: TShape
+        Left = 128
+        Height = 2
+        Top = 54
+        Width = 64
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Log'
+      ClientHeight = 397
+      ClientWidth = 492
+      object Memo1: TMemo
+        AnchorSideLeft.Control = TabSheet2
+        AnchorSideTop.Control = TabSheet2
+        AnchorSideRight.Control = Button1
+        AnchorSideBottom.Control = TabSheet2
+        AnchorSideBottom.Side = asrBottom
+        Left = 0
+        Height = 397
+        Top = 0
+        Width = 360
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Right = 3
+        Lines.Strings = (
+          '**Note**'
+          'while IpcServer.PeekMessage(0, True) do'
+          '  IpcServer.ReadMessage;  '
+        )
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object Edit1: TEdit
+        AnchorSideLeft.Control = Button1
+        Left = 363
+        Height = 23
+        Top = 8
+        Width = 114
+        TabOrder = 1
+        Text = 'Fluff01'
+        OnChange = Edit1Change
+        OnEditingDone = Edit1EditingDone
+      end
+      object Label2: TLabel
+        AnchorSideLeft.Control = Button1
+        AnchorSideBottom.Control = Button1
+        Left = 363
+        Height = 15
+        Top = 103
+        Width = 34
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Bottom = 2
+        Caption = 'Label2'
+      end
+      object Button1: TButton
+        AnchorSideRight.Control = TabSheet2
+        AnchorSideRight.Side = asrBottom
+        Left = 363
+        Height = 32
+        Top = 120
+        Width = 129
+        Anchors = [akRight]
+        Caption = 'Active/Deactive'
+        TabOrder = 2
+        OnClick = Button1Click
+      end
+      object Button2: TButton
+        AnchorSideLeft.Control = Button1
+        AnchorSideTop.Control = Button1
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Button1
+        AnchorSideRight.Side = asrBottom
+        Left = 363
+        Height = 32
+        Top = 152
+        Width = 129
+        Anchors = [akTop, akLeft, akRight]
+        Caption = 'InstanceID'
+        TabOrder = 3
+        OnClick = Button2Click
+      end
+    end
+  end
+  object SimpleIPCServer1: TSimpleIPCServer
+    Active = False
+    Global = False
+    OnMessage = SimpleIPCServer1Message
+    OnMessageQueued = SimpleIPCServer1MessageQueued
+    Threaded = False
+    Left = 256
+    Top = 32
+  end
+end
